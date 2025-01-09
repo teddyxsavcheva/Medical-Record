@@ -32,6 +32,6 @@ public class Diagnose {
     @JoinColumn(name = "diagnose_type_id", nullable = false)
     private DiagnoseType diagnoseType;
 
-    @OneToMany(mappedBy = "diagnoses")
+    @OneToMany(mappedBy = "diagnose")
     private Set<DoctorAppointment> doctorAppointments = new HashSet<>();
 }

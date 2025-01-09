@@ -47,7 +47,7 @@ public class Patient {
     @JoinColumn(name = "family_doctor_id", nullable = false)
     private Doctor familyDoctor;
 
-    @OneToMany
+    @OneToMany(mappedBy = "patient")
     @Column(name = "doctor_appointments_id")
     private Set<DoctorAppointment> appointments = new HashSet<>();
 

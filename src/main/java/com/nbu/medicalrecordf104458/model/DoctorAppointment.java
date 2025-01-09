@@ -36,7 +36,7 @@ public class DoctorAppointment {
 
     @ManyToOne
     @JoinColumn(name = "diagnose_id", nullable = false)
-    private Diagnose diagnoses;
+    private Diagnose diagnose;
 
     @ManyToOne
     @JoinColumn(name = "patient_id", nullable = false)
@@ -50,7 +50,7 @@ public class DoctorAppointment {
     @JoinColumn(name = "sick_leave_id")
     private SickLeave sickLeave;
 
-    @OneToMany
+    @OneToMany(mappedBy = "doctorAppointment")
     @JoinColumn(name = "treatment_id")
     private Set<Treatment> treatments = new HashSet<>();
 
