@@ -7,7 +7,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -16,8 +15,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -50,7 +47,8 @@ public class DoctorAppointment {
     @JoinColumn(name = "sick_leave_id")
     private SickLeave sickLeave;
 
-    @OneToMany(mappedBy = "doctorAppointment")  // One appointment has many treatments
-    private Set<Treatment> treatments = new HashSet<>();
+    // TODO: Fix this and decide if it will be n:m or 1:1
+//    @OneToMany(mappedBy = "doctorAppointment")
+//    private Set<Treatment> treatments = new HashSet<>();
 
 }

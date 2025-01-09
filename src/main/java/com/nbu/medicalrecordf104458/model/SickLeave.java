@@ -7,7 +7,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,4 +35,5 @@ public class SickLeave {
 
     @OneToOne(mappedBy = "sickLeave")
     private DoctorAppointment doctorAppointment;
+
 }
