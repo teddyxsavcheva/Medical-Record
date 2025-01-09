@@ -34,7 +34,6 @@ public class SickLeave {
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
 
-    @NotNull(message = "Doctor appointment cannot be null")
     @OneToOne(mappedBy = "sickLeave")
     private DoctorAppointment doctorAppointment;
 }

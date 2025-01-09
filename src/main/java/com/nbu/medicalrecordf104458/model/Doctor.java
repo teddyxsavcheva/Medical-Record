@@ -47,5 +47,5 @@ public class Doctor {
     private Set<Patient> patients = new HashSet<>();
 
     @OneToMany(mappedBy = "doctor")
-    private Set<Doctor> doctors = new HashSet<>();
+    private Set<DoctorAppointment> doctors = new HashSet<>();
 }

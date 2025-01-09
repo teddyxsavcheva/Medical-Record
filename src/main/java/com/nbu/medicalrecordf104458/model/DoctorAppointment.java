@@ -23,7 +23,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "visit")
+@Table(name = "doctor_appointment")
 public class DoctorAppointment {
 
     @Id
@@ -50,8 +50,7 @@ public class DoctorAppointment {
     @JoinColumn(name = "sick_leave_id")
     private SickLeave sickLeave;
 
-    @OneToMany(mappedBy = "doctorAppointment")
-    @JoinColumn(name = "treatment_id")
+    @OneToMany(mappedBy = "doctorAppointment")  // One appointment has many treatments
     private Set<Treatment> treatments = new HashSet<>();
 
 }
