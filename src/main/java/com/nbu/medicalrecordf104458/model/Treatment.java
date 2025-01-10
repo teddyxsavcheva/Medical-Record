@@ -5,11 +5,17 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -33,5 +39,13 @@ public class Treatment {
     @NotEmpty(message = "Frequency cannot be empty")
     @Column(name = "frequency", nullable = false)
     private String frequency;
+
+    @ManyToMany
+    @JoinTable(
+            name = "appointment_treatment",
+            joinColumns = @JoinColumn(name = "treatment_id"),
+            inverseJoinColumns = @JoinColumn(name = "appointment_id")
+    )
+    private Set<DoctorAppointment> appointments = new HashSet<>();
 
 }

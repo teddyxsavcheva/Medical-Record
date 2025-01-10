@@ -6,6 +6,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -15,12 +17,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "doctor_appointment")
+@Table(name = "appointment")
 public class DoctorAppointment {
 
     @Id
@@ -47,8 +51,7 @@ public class DoctorAppointment {
     @JoinColumn(name = "sick_leave_id")
     private SickLeave sickLeave;
 
-    // TODO: Fix this and decide if it will be n:m or 1:1
-//    @OneToMany(mappedBy = "doctorAppointment")
-//    private Set<Treatment> treatments = new HashSet<>();
+    @ManyToMany(mappedBy = "appointments")
+    private Set<Treatment> treatments = new HashSet<>();
 
 }
