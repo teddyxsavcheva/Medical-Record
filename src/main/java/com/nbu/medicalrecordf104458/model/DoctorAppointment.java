@@ -51,6 +51,8 @@ public class DoctorAppointment {
     @JoinColumn(name = "sick_leave_id")
     private SickLeave sickLeave;
 
+    // TODO: Ask if this will be a problem - it will only create entries when
+    //  there's a record from both sides but still
     @ManyToMany(mappedBy = "appointments")
     private Set<Treatment> treatments = new HashSet<>();
 
