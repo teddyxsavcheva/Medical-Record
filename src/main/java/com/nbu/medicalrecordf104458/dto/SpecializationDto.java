@@ -12,17 +12,13 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class DiagnoseDto {
+public class SpecializationDto {
 
-    //TODO: Decide if I should put validation here
     private Long id;
 
-    @NotEmpty(message = "Diagnose should have a name")
+    @NotEmpty(message = "Specialization should have a name")
     private String name;
 
-    @NotEmpty(message = "Diagnose should have a description")
-    private String description;
-
-    private List<Long> appointmentIds;
+    private List<Long> doctorIds;
 
 }

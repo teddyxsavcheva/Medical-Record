@@ -1,9 +1,10 @@
-package com.nbu.medicalrecordf104458.service.impl;
+package com.nbu.medicalrecordf104458.service.implementation;
 
 import com.nbu.medicalrecordf104458.dto.DiagnoseDto;
 import com.nbu.medicalrecordf104458.mapper.DiagnoseMapper;
 import com.nbu.medicalrecordf104458.model.Diagnose;
 import com.nbu.medicalrecordf104458.repository.DiagnoseRepository;
+import com.nbu.medicalrecordf104458.repository.DoctorAppointmentRepository;
 import com.nbu.medicalrecordf104458.service.DiagnoseService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
@@ -17,8 +18,8 @@ import java.util.stream.Collectors;
 public class DiagnoseServiceImpl implements DiagnoseService {
 
     private final DiagnoseRepository repository;
+    private final DoctorAppointmentRepository appointmentRepository;
     private final DiagnoseMapper mapper;
-
 
     @Override
     public List<DiagnoseDto> getAllDiagnoses() {
@@ -51,6 +52,13 @@ public class DiagnoseServiceImpl implements DiagnoseService {
 
         diagnose.setName(diagnoseDto.getName());
         diagnose.setDescription(diagnoseDto.getDescription());
+
+        if (!diagnoseDto.getAppointmentIds().isEmpty()) {
+            diagnose.setDoctorAppointments(diagnoseDto.getAppointmentIds().stream()
+                    .map(appointmentId -> appointmentRepository.findById(appointmentId)
+                            .orElseThrow(() -> new EntityNotFoundException("No appointment with id: " + appointmentId)))
+                    .collect(Collectors.toList()));
+        }
 
         return mapper.convertToDto(repository.save(diagnose));
     }
