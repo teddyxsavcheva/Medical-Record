@@ -17,8 +17,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
@@ -54,6 +53,6 @@ public class DoctorAppointment {
     // TODO: Ask if this will be a problem - it will only create entries when
     //  there's a record from both sides but still
     @ManyToMany(mappedBy = "appointments")
-    private Set<Treatment> treatments = new HashSet<>();
+    private List<Treatment> treatments;
 
 }

@@ -12,8 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
@@ -35,6 +34,6 @@ public class Diagnose {
     private String description;
 
     @OneToMany(mappedBy = "diagnose")
-    private Set<DoctorAppointment> doctorAppointments = new HashSet<>();
+    private List<DoctorAppointment> doctorAppointments;
 
 }

@@ -14,8 +14,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
@@ -46,6 +45,6 @@ public class Treatment {
             joinColumns = @JoinColumn(name = "treatment_id"),
             inverseJoinColumns = @JoinColumn(name = "appointment_id")
     )
-    private Set<DoctorAppointment> appointments = new HashSet<>();
+    private List<DoctorAppointment> appointments;
 
 }

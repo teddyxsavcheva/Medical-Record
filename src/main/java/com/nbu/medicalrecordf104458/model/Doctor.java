@@ -15,8 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
@@ -41,12 +40,12 @@ public class Doctor {
             joinColumns = @JoinColumn(name = "doctor_id"),
             inverseJoinColumns = @JoinColumn(name = "specialization_id")
     )
-    private Set<Specialization> specializations = new HashSet<>();
+    private List<Specialization> specializations;
 
     @OneToMany(mappedBy = "familyDoctor")
-    private Set<Patient> patients = new HashSet<>();
+    private List<Patient> patients;
 
     @OneToMany(mappedBy = "doctor")
-    private Set<DoctorAppointment> doctors = new HashSet<>();
+    private List<DoctorAppointment> doctors;
 
 }
