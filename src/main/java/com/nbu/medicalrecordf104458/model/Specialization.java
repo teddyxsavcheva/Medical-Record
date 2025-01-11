@@ -1,5 +1,6 @@
 package com.nbu.medicalrecordf104458.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -7,8 +8,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,9 +28,9 @@ public class Specialization {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "specialization_type_id", nullable = false)
-    private SpecializationType specializationType;
+    @NotEmpty(message = "Specialization name cannot be empty")
+    @Column(name = "name", nullable = false, unique = true)
+    private String name;
 
     @ManyToMany
     @JoinTable(name = "doctor_specialization",

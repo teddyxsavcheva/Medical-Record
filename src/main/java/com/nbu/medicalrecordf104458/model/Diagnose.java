@@ -1,14 +1,13 @@
 package com.nbu.medicalrecordf104458.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,10 +26,13 @@ public class Diagnose {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "Diagnose type cannot be null")
-    @ManyToOne
-    @JoinColumn(name = "diagnose_type_id", nullable = false)
-    private DiagnoseType diagnoseType;
+    @NotEmpty(message = "Diagnose name cannot be empty")
+    @Column(name = "name", nullable = false, unique = true)
+    private String name;
+
+    @NotEmpty(message = "Diagnose description cannot be empty")
+    @Column(name = "description", nullable = false, length = 500)
+    private String description;
 
     @OneToMany(mappedBy = "diagnose")
     private Set<DoctorAppointment> doctorAppointments = new HashSet<>();
