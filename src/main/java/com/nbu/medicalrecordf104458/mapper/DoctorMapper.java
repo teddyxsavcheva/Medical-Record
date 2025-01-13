@@ -19,6 +19,9 @@ public class DoctorMapper {
     public DoctorDto convertToDto(Doctor doctor) {
         DoctorDto dto = new DoctorDto();
 
+        dto.setId(doctor.getId());
+        dto.setName(doctor.getName());
+
 
         return dto;
     }
