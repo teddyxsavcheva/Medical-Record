@@ -5,7 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
@@ -33,7 +33,7 @@ public class Diagnose {
     @Column(name = "description", nullable = false, length = 500)
     private String description;
 
-    @OneToMany(mappedBy = "diagnose")
-    private List<DoctorAppointment> doctorAppointments;
+    @ManyToMany
+    private List<DoctorAppointment> appointments;
 
 }

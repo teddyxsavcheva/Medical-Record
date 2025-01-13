@@ -34,9 +34,8 @@ public class DoctorAppointment {
     @Column(name = "visit_date", nullable = false)
     private LocalDate visitDate;
 
-    @ManyToOne
-    @JoinColumn(name = "diagnose_id", nullable = false)
-    private Diagnose diagnose;
+    @ManyToMany(mappedBy = "appointments")
+    private List<Diagnose> diagnoses;
 
     @ManyToOne
     @JoinColumn(name = "patient_id", nullable = false)
@@ -50,8 +49,6 @@ public class DoctorAppointment {
     @JoinColumn(name = "sick_leave_id")
     private SickLeave sickLeave;
 
-    // TODO: Ask if this will be a problem - it will only create entries when
-    //  there's a record from both sides but still
     @ManyToMany(mappedBy = "appointments")
     private List<Treatment> treatments;
 

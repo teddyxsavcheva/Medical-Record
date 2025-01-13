@@ -54,7 +54,7 @@ public class DiagnoseServiceImpl implements DiagnoseService {
         diagnose.setDescription(diagnoseDto.getDescription());
 
         if (!diagnoseDto.getAppointmentIds().isEmpty()) {
-            diagnose.setDoctorAppointments(diagnoseDto.getAppointmentIds().stream()
+            diagnose.setAppointments(diagnoseDto.getAppointmentIds().stream()
                     .map(appointmentId -> appointmentRepository.findById(appointmentId)
                             .orElseThrow(() -> new EntityNotFoundException("No appointment with id: " + appointmentId)))
                     .collect(Collectors.toList()));
