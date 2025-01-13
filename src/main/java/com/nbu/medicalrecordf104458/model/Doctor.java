@@ -1,10 +1,14 @@
 package com.nbu.medicalrecordf104458.model;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorColumn;
+import jakarta.persistence.DiscriminatorType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -20,6 +24,8 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE) // Single table for both types
+@DiscriminatorColumn(name = "doctor_type", discriminatorType = DiscriminatorType.STRING)
 @Entity
 @Table(name = "doctor")
 public class Doctor {
@@ -32,18 +38,12 @@ public class Doctor {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "is_family_doctor", nullable = false)
-    private boolean isFamilyDoctor;
-
     @ManyToMany
     @JoinTable(name = "doctor_specialization",
             joinColumns = @JoinColumn(name = "doctor_id"),
             inverseJoinColumns = @JoinColumn(name = "specialization_id")
     )
     private List<Specialization> specializations;
-
-    @OneToMany(mappedBy = "familyDoctor")
-    private List<Patient> patients;
 
     @OneToMany(mappedBy = "doctor")
     private List<DoctorAppointment> doctors;
