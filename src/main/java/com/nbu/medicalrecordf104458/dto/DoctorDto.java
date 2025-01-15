@@ -19,12 +19,6 @@ public class DoctorDto {
     @NotEmpty(message = "Doctor should have a name")
     private String name;
 
-    private boolean isFamilyDoctor;
-
     private List<Long> specializationIds;
-
-    private List<Long> patientIds;
-
-    private List<Long> doctorIds;
 
 }

@@ -22,7 +22,9 @@ public class DoctorMapper {
         dto.setId(doctor.getId());
         dto.setName(doctor.getName());
 
+        if (!dto.getSpecializationIds().isEmpty()) {
 
+        }
         return dto;
     }
 
