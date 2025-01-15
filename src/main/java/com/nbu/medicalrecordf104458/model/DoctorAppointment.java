@@ -10,6 +10,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,13 +34,16 @@ public class DoctorAppointment {
     @Column(name = "visit_date", nullable = false)
     private LocalDate visitDate;
 
+    @NotEmpty(message = "An appointment must have at least one diagnose")
     @ManyToMany(mappedBy = "appointments")
     private List<Diagnose> diagnoses;
 
+    @NotNull(message = "An appointment must have a patient")
     @ManyToOne
     @JoinColumn(name = "patient_id", nullable = false)
     private Patient patient;
 
+    @NotNull(message = "An appointment must have a doctor")
     @ManyToOne
     @JoinColumn(name = "doctor_id", nullable = false)
     private Doctor doctor;

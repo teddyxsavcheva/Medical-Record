@@ -44,7 +44,7 @@ public class Patient {
     @NotNull(message = "Each patient should be assigned to a family doctor.")
     @ManyToOne
     @JoinColumn(name = "family_doctor_id", nullable = false)
-    private Doctor familyDoctor;
+    private GeneralPractitioner familyDoctor;
 
     @OneToMany(mappedBy = "patient")
     @Column(name = "doctor_appointments_id")

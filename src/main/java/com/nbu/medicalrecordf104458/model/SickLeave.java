@@ -33,6 +33,7 @@ public class SickLeave {
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
 
+    @NotNull(message = "A sick leave must have an appointment")
     @OneToOne(mappedBy = "sickLeave")
     private DoctorAppointment doctorAppointment;
 

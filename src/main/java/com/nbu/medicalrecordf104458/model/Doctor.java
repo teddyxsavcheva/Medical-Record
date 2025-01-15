@@ -38,10 +38,11 @@ public class Doctor {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @NotEmpty(message = "A doctor must have at least one specialization")
     @ManyToMany
     @JoinTable(name = "doctor_specialization",
             joinColumns = @JoinColumn(name = "doctor_id"),
-            inverseJoinColumns = @JoinColumn(name = "specialization_id")
+            inverseJoinColumns = @JoinColumn(name = "specialization_id", nullable = false)
     )
     private List<Specialization> specializations;
 

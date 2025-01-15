@@ -14,7 +14,6 @@ import java.util.List;
 @AllArgsConstructor
 public class DiagnoseDto {
 
-    //TODO: Decide if I should put validation here
     private Long id;
 
     @NotEmpty(message = "Diagnose should have a name")

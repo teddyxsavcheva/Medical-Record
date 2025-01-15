@@ -19,6 +19,7 @@ public class DoctorDto {
     @NotEmpty(message = "Doctor should have a name")
     private String name;
 
+    @NotEmpty(message = "Doctor should have at least one specialization")
     private List<Long> specializationIds;
 
 }
