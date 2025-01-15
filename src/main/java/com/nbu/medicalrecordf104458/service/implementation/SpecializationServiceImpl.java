@@ -2,6 +2,7 @@ package com.nbu.medicalrecordf104458.service.implementation;
 
 import com.nbu.medicalrecordf104458.dto.SpecializationDto;
 import com.nbu.medicalrecordf104458.mapper.SpecializationMapper;
+import com.nbu.medicalrecordf104458.model.Doctor;
 import com.nbu.medicalrecordf104458.model.Specialization;
 import com.nbu.medicalrecordf104458.repository.DoctorRepository;
 import com.nbu.medicalrecordf104458.repository.SpecializationRepository;
@@ -17,13 +18,13 @@ import java.util.stream.Collectors;
 @Service
 public class SpecializationServiceImpl implements SpecializationService {
 
-    private final SpecializationRepository repository;
+    private final SpecializationRepository specializationRepository;
     private final DoctorRepository doctorRepository;
     private final SpecializationMapper mapper;
 
     @Override
     public List<SpecializationDto> getAllSpecializations() {
-        List<Specialization> specializations = repository.findAll();
+        List<Specialization> specializations = specializationRepository.findAll();
 
         return specializations.stream()
                 .map(mapper::convertToDto)
@@ -32,7 +33,7 @@ public class SpecializationServiceImpl implements SpecializationService {
 
     @Override
     public SpecializationDto getSpecializationById(Long id) {
-        Specialization specialization = repository.findById(id)
+        Specialization specialization = specializationRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No Specialization found with id: " + id));
 
         return mapper.convertToDto(specialization);
@@ -42,12 +43,12 @@ public class SpecializationServiceImpl implements SpecializationService {
     public SpecializationDto createSpecialization(SpecializationDto specializationDto) {
        Specialization specialization = mapper.convertToEntity(specializationDto);
 
-        return mapper.convertToDto(repository.save(specialization));
+        return mapper.convertToDto(specializationRepository.save(specialization));
     }
 
     @Override
     public SpecializationDto updateSpecialization(Long id, SpecializationDto specializationDto) {
-        Specialization specialization = repository.findById(id)
+        Specialization specialization = specializationRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No Specialization found with id: " + id));
 
         specialization.setName(specializationDto.getName());
@@ -59,12 +60,41 @@ public class SpecializationServiceImpl implements SpecializationService {
                     .collect(Collectors.toList()));
         }
 
-        return mapper.convertToDto(repository.save(specialization));
+        return mapper.convertToDto(specializationRepository.save(specialization));
     }
 
     @Override
     public void deleteSpecialization(Long id) {
+        Specialization specialization = specializationRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("No specialization found with id: " + id));
 
+        specializationRepository.delete(specialization);
+    }
+
+    @Override
+    public SpecializationDto addDoctor(Long specializationId, Long doctorId) {
+        Specialization specialization = specializationRepository.findById(specializationId)
+                .orElseThrow(() -> new EntityNotFoundException("No specialization found with id: " + specializationId));
+
+        Doctor doctor = doctorRepository.findById(doctorId)
+                .orElseThrow(() -> new EntityNotFoundException("No doctor found with id: " + doctorId));
+
+        specialization.getDoctors().add(doctor);
+
+        return mapper.convertToDto(specializationRepository.save(specialization));
+    }
+
+    @Override
+    public SpecializationDto removeDoctor(Long specializationId, Long doctorId) {
+        Specialization specialization = specializationRepository.findById(specializationId)
+                .orElseThrow(() -> new EntityNotFoundException("No specialization found with id: " + specializationId));
+
+        Doctor doctor = doctorRepository.findById(doctorId)
+                .orElseThrow(() -> new EntityNotFoundException("No doctor found with id: " + doctorId));
+
+        specialization.getDoctors().remove(doctor);
+
+        return mapper.convertToDto(specializationRepository.save(specialization));
     }
 
 }

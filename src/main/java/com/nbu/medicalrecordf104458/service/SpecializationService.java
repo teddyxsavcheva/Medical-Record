@@ -16,4 +16,8 @@ public interface SpecializationService {
 
     void deleteSpecialization(Long id);
 
+    SpecializationDto addDoctor(Long specializationId, Long doctorId);
+
+    SpecializationDto removeDoctor(Long specializationId, Long doctorId);
+
 }

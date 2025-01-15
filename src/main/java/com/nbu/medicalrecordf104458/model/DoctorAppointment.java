@@ -6,7 +6,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
@@ -46,7 +45,7 @@ public class DoctorAppointment {
     private Doctor doctor;
 
     @OneToOne
-    @JoinColumn(name = "sick_leave_id")
+    @JoinColumn(name = "sick_leave_id", unique = true)
     private SickLeave sickLeave;
 
     @ManyToMany(mappedBy = "appointments")

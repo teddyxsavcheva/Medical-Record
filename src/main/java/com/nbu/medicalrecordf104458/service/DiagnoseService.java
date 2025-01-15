@@ -16,4 +16,8 @@ public interface DiagnoseService {
 
     void deleteDiagnose(Long id);
 
+    DiagnoseDto addAppointment(Long diagnoseId, Long appointmentId);
+
+    DiagnoseDto removeAppointment(Long diagnoseId, Long appointmentId);
+
 }
