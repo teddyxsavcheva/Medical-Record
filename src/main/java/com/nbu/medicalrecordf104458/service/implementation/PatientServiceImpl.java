@@ -74,16 +74,6 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public PatientDto addGeneralPractitioner(Long patientId, Long gpId) {
-        return null;
-    }
-
-    @Override
-    public PatientDto removeGeneralPractitioner(Long patientId, Long gpId) {
-        return null;
-    }
-
-    @Override
     public boolean isInsurancePaidLast6Months(Long patientId) {
         Patient patient = patientRepository.findById(patientId)
                 .orElseThrow(() -> new EntityNotFoundException("No patient found with id: " + patientId));

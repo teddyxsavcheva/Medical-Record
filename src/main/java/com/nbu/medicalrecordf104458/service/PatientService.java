@@ -17,10 +17,6 @@ public interface PatientService {
 
     void deletePatient(Long id);
 
-    PatientDto addGeneralPractitioner(Long patientId, Long gpId);
-
-    PatientDto removeGeneralPractitioner(Long patientId, Long gpId);
-
     boolean isInsurancePaidLast6Months(Long patientId);
 
 }
