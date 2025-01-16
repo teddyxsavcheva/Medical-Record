@@ -64,7 +64,7 @@ public class SpecializationController {
         return ResponseEntity.ok(updatedDto);
     }
 
-    @DeleteMapping("{specializationId}/doctors/{doctorId}")
+    @DeleteMapping("{/specializationId}/doctors/{doctorId}")
     public ResponseEntity<SpecializationDto> removeDoctor(@PathVariable Long specializationId, @PathVariable Long doctorId) {
         SpecializationDto updatedDto = specializationService.removeDoctor(specializationId, doctorId);
 
