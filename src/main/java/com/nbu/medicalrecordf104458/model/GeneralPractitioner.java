@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -17,6 +18,7 @@ import java.util.List;
 public class GeneralPractitioner extends Doctor {
 
     @OneToMany(mappedBy = "familyDoctor")
-    private List<Patient> patients;
+    // To prevent NullPointerException as GP may not have patients
+    private List<Patient> patients = new ArrayList<>();
 
 }
