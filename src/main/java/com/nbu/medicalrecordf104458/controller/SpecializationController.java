@@ -52,7 +52,7 @@ public class SpecializationController {
     public ResponseEntity<HttpStatus> deleteSpecialization(@PathVariable Long id) {
         specializationService.deleteSpecialization(id);
 
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok(HttpStatus.NO_CONTENT);
     }
 
     // Add/Remove methods for Doctor many-to-many table

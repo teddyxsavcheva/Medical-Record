@@ -52,7 +52,7 @@ public class DiagnoseController {
     public ResponseEntity<HttpStatus> deleteDiagnose(@PathVariable Long id) {
         diagnoseService.deleteDiagnose(id);
 
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok(HttpStatus.NO_CONTENT);
     }
 
     // Add/Remove Appointments in many-to-many table

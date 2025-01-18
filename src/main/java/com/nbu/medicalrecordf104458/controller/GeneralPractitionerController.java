@@ -52,7 +52,7 @@ public class GeneralPractitionerController {
     public ResponseEntity<HttpStatus> deleteDoctor(@PathVariable Long id) {
         gpService.deleteDoctor(id);
 
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok(HttpStatus.NO_CONTENT);
     }
 
     // Add/Remove methods for Specialization many-to-many table

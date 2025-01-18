@@ -12,6 +12,8 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+//TODO: Think about using Builder pattern and checking for duplicate
+// (if I have time left)
 public class DiagnoseDto {
 
     private Long id;
