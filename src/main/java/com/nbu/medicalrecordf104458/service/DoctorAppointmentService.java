@@ -2,11 +2,11 @@ package com.nbu.medicalrecordf104458.service;
 
 import com.nbu.medicalrecordf104458.dto.AppointmentDto;
 
-import java.util.List;
+import java.util.Set;
 
 public interface DoctorAppointmentService {
 
-    List<AppointmentDto> getAllAppointments();
+    Set<AppointmentDto> getAllAppointments();
 
     AppointmentDto getAppointmentById(Long id);
 

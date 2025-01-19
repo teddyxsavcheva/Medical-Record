@@ -11,7 +11,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -23,12 +23,10 @@ public class DoctorServiceImpl implements DoctorService {
     private final SpecializationRepository specializationRepository;
 
     @Override
-    public List<DoctorDto> getAllDoctors() {
-        List<Doctor> doctors = doctorRepository.findAll();
-
-        return doctors.stream()
+    public Set<DoctorDto> getAllDoctors() {
+        return doctorRepository.findAll().stream()
                 .map(mapper::convertToDto)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
     @Override
@@ -57,7 +55,7 @@ public class DoctorServiceImpl implements DoctorService {
             doctor.setSpecializations(doctorDto.getSpecializationIds().stream()
                     .map(specializationId -> specializationRepository.findById(specializationId)
                             .orElseThrow(() -> new EntityNotFoundException("No Specialization found with id: " + specializationId)))
-                    .collect(Collectors.toList()));
+                    .collect(Collectors.toSet()));
         }
 
         return mapper.convertToDto(doctorRepository.save(doctor));

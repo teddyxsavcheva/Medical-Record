@@ -25,7 +25,7 @@ public class SpecializationMapper {
         if (!specialization.getDoctors().isEmpty()) {
             dto.setDoctorIds(specialization.getDoctors().stream()
                     .map(Doctor::getId)
-                    .collect(Collectors.toList()));
+                    .collect(Collectors.toSet()));
         }
 
         return dto;
@@ -41,7 +41,7 @@ public class SpecializationMapper {
             specialization.setDoctors(dto.getDoctorIds().stream()
                     .map(id -> doctorRepository.findById(id)
                             .orElseThrow(() -> new EntityNotFoundException("No Doctor found with id: " + id)))
-                    .collect(Collectors.toList()));
+                    .collect(Collectors.toSet()));
         }
 
         return specialization;

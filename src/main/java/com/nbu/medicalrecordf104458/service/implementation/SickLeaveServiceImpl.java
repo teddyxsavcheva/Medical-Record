@@ -11,7 +11,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -23,10 +23,10 @@ public class SickLeaveServiceImpl implements SickLeaveService {
     private final SickLeaveRepository repository;
 
     @Override
-    public List<SickLeaveDto> getAllSickLeaves() {
+    public Set<SickLeaveDto> getAllSickLeaves() {
         return repository.findAll().stream()
                 .map(mapper::convertToDto)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
     @Override

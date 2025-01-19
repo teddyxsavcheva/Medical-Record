@@ -6,8 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -26,7 +26,7 @@ public class TreatmentDto {
     @NotNull(message = "Frequency cannot be null")
     private String frequency;
 
-    private List<Long> appointmentIds = new ArrayList<>();
+    private Set<Long> appointmentIds = new HashSet<>();
 
 
 }

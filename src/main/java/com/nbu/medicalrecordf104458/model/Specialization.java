@@ -14,8 +14,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -37,6 +37,6 @@ public class Specialization {
             joinColumns = @JoinColumn(name = "specialization_id"),
             inverseJoinColumns = @JoinColumn(name = "doctor_id")
     )
-    private List<Doctor> doctors = new ArrayList<>();
+    private Set<Doctor> doctors = new HashSet<>();
 
 }

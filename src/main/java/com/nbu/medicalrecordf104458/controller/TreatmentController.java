@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @RequestMapping("/treatments")
@@ -18,7 +18,7 @@ public class TreatmentController {
     private final TreatmentService treatmentService;
 
     @GetMapping("/")
-    public ResponseEntity<List<TreatmentDto>> getAllTreatments() {
+    public ResponseEntity<Set<TreatmentDto>> getAllTreatments() {
         return ResponseEntity.ok(treatmentService.getAllTreatments());
     }
 

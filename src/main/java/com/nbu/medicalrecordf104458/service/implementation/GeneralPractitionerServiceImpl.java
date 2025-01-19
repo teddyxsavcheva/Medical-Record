@@ -13,7 +13,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -26,10 +26,10 @@ public class GeneralPractitionerServiceImpl implements GeneralPractitionerServic
     private final GeneralPractitionerMapper gpMapper;
 
     @Override
-    public List<GeneralPractitionerDto> getAllDoctors() {
+    public Set<GeneralPractitionerDto> getAllDoctors() {
         return gpRepository.findAll().stream()
                 .map(gpMapper::convertToDto)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
     @Override
@@ -58,14 +58,14 @@ public class GeneralPractitionerServiceImpl implements GeneralPractitionerServic
             gp.setSpecializations(gpDto.getDoctor().getSpecializationIds().stream()
                     .map(specializationId -> specializationRepository.findById(specializationId)
                             .orElseThrow(() -> new EntityNotFoundException("No Specialization found with id: " + specializationId)))
-                    .collect(Collectors.toList()));
+                    .collect(Collectors.toSet()));
         }
 
         if (!gpDto.getPatients().isEmpty()) {
             gp.setPatients(gpDto.getPatients().stream()
                     .map(patientId -> patientRepository.findById(patientId)
                             .orElseThrow(() -> new EntityNotFoundException("No Patient found with id: " + patientId)))
-                    .collect(Collectors.toList()));
+                    .collect(Collectors.toSet()));
         }
 
         return gpMapper.convertToDto(gpRepository.save(gp));

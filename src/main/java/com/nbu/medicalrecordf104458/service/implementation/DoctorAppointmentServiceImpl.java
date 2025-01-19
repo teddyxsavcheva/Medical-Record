@@ -16,7 +16,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -32,10 +32,10 @@ public class DoctorAppointmentServiceImpl implements DoctorAppointmentService {
     private final DoctorAppointmentMapper mapper;
 
     @Override
-    public List<AppointmentDto> getAllAppointments() {
+    public Set<AppointmentDto> getAllAppointments() {
         return appointmentRepository.findAll().stream()
                 .map(mapper::convertToDto)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
     @Override
@@ -69,13 +69,13 @@ public class DoctorAppointmentServiceImpl implements DoctorAppointmentService {
         appointment.setDiagnoses(appointmentDto.getDiagnoses().stream()
                 .map(diagnoseId -> diagnoseRepository.findById(diagnoseId)
                         .orElseThrow(() -> new EntityNotFoundException("No Diagnose found with id: " + diagnoseId)))
-                .collect(Collectors.toList()));
+                .collect(Collectors.toSet()));
 
         if (!appointmentDto.getTreatments().isEmpty()) {
             appointment.setTreatments(appointmentDto.getTreatments().stream()
                     .map(treatmentId -> treatmentRepository.findById(treatmentId)
                             .orElseThrow(() -> new EntityNotFoundException("No Treatment found with id: " + treatmentId)))
-                    .collect(Collectors.toList()));
+                    .collect(Collectors.toSet()));
         }
 
         if (appointmentDto.getSickLeaveId() != null) {

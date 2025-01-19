@@ -28,7 +28,7 @@ public class GeneralPractitionerMapper {
         if (!gp.getPatients().isEmpty()) {
             dto.setPatients(gp.getPatients().stream()
                     .map(Patient::getId)
-                    .collect(Collectors.toList()));
+                    .collect(Collectors.toSet()));
         }
 
         return dto;
@@ -44,14 +44,14 @@ public class GeneralPractitionerMapper {
             gp.setSpecializations(dto.getDoctor().getSpecializationIds().stream()
                     .map(id -> specializationRepository.findById(id)
                             .orElseThrow(() -> new EntityNotFoundException("No Specialization found with id: " + id)))
-                    .collect(Collectors.toList()));
+                    .collect(Collectors.toSet()));
         }
 
         if (!dto.getPatients().isEmpty()) {
             gp.setPatients(dto.getPatients().stream()
                     .map(id -> patientRepository.findById(id)
                             .orElseThrow(() -> new EntityNotFoundException("No Patient found with id: " + id)))
-                    .collect(Collectors.toList()));
+                    .collect(Collectors.toSet()));
         }
 
         return gp;

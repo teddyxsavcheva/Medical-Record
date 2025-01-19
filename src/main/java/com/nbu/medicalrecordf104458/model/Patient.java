@@ -16,7 +16,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -48,6 +49,6 @@ public class Patient {
 
     @OneToMany(mappedBy = "patient")
     @Column(name = "doctor_appointments_id")
-    private List<DoctorAppointment> appointments;
+    private Set<DoctorAppointment> appointments = new HashSet<>();
 
 }

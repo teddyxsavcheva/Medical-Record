@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -25,12 +25,11 @@ public class PatientServiceImpl implements PatientService {
     private final GeneralPractitionerRepository gpRepository;
 
     @Override
-    public List<PatientDto> getAllPatients() {
-        List<Patient> patients = patientRepository.findAll();
+    public Set<PatientDto> getAllPatients() {
 
-        return patients.stream()
+        return patientRepository.findAll().stream()
                 .map(mapper::convertToDto)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
     @Override

@@ -35,7 +35,7 @@ public class DoctorAppointmentMapper {
 
         dto.setDiagnoses(appointment.getDiagnoses().stream()
                 .map(Diagnose::getId)
-                .collect(Collectors.toList()));
+                .collect(Collectors.toSet()));
 
         if (appointment.getSickLeave() != null) {
             dto.setSickLeaveId(appointment.getSickLeave().getId());
@@ -44,7 +44,7 @@ public class DoctorAppointmentMapper {
         if (!appointment.getTreatments().isEmpty()) {
             dto.setTreatments(appointment.getTreatments().stream()
                     .map(Treatment::getId)
-                    .collect(Collectors.toList()));
+                    .collect(Collectors.toSet()));
         }
 
         return dto;
@@ -64,7 +64,7 @@ public class DoctorAppointmentMapper {
         appointment.setDiagnoses(dto.getDiagnoses().stream()
                 .map(id -> diagnoseRepository.findById(id)
                         .orElseThrow(() -> new EntityNotFoundException("No Diagnose found with id: " + id)))
-                .collect(Collectors.toList()));
+                .collect(Collectors.toSet()));
 
         if (dto.getSickLeaveId() != null) {
             appointment.setSickLeave(sickLeaveRepository.findById(dto.getSickLeaveId())
@@ -75,7 +75,7 @@ public class DoctorAppointmentMapper {
             appointment.setTreatments(dto.getTreatments().stream()
                     .map(id -> treatmentRepository.findById(id)
                             .orElseThrow(() -> new EntityNotFoundException("No Treatment found with id: " + id)))
-                    .collect(Collectors.toList()));
+                    .collect(Collectors.toSet()));
         }
 
         return appointment;

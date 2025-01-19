@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -24,6 +24,6 @@ public class DiagnoseDto {
     @NotEmpty(message = "Diagnose should have a description")
     private String description;
 
-    private List<Long> appointmentIds;
+    private Set<Long> appointmentIds;
 
 }

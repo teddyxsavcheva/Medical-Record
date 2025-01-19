@@ -27,7 +27,7 @@ public class DiagnoseMapper {
         if (!diagnose.getAppointments().isEmpty()) {
             dto.setAppointmentIds(diagnose.getAppointments().stream()
                     .map(DoctorAppointment::getId)
-                    .collect(Collectors.toList()));
+                    .collect(Collectors.toSet()));
         }
 
         return dto;
@@ -44,7 +44,7 @@ public class DiagnoseMapper {
             entity.setAppointments(dto.getAppointmentIds().stream()
                     .map(id -> appointmentRepository.findById(id)
                             .orElseThrow(() -> new EntityNotFoundException("No Diagnose found with id: " + id)))
-                    .collect(Collectors.toList()));
+                    .collect(Collectors.toSet()));
         }
 
         return entity;

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @RequestMapping("/sick-leaves")
@@ -25,7 +25,7 @@ public class SickLeaveController {
     private final SickLeaveService sickLeaveService;
 
     @GetMapping("/")
-    public ResponseEntity<List<SickLeaveDto>> getAllSickLeaves() {
+    public ResponseEntity<Set<SickLeaveDto>> getAllSickLeaves() {
         return ResponseEntity.ok(sickLeaveService.getAllSickLeaves());
     }
 

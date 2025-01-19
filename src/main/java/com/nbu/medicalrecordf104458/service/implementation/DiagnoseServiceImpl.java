@@ -11,7 +11,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -23,12 +23,10 @@ public class DiagnoseServiceImpl implements DiagnoseService {
     private final DiagnoseMapper mapper;
 
     @Override
-    public List<DiagnoseDto> getAllDiagnoses() {
-        List<Diagnose> diagnoses = diagnoseRepository.findAll();
-
-        return diagnoses.stream()
+    public Set<DiagnoseDto> getAllDiagnoses() {
+        return diagnoseRepository.findAll().stream()
                 .map(mapper::convertToDto)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
     @Override
@@ -58,7 +56,7 @@ public class DiagnoseServiceImpl implements DiagnoseService {
             diagnose.setAppointments(diagnoseDto.getAppointmentIds().stream()
                     .map(appointmentId -> appointmentRepository.findById(appointmentId)
                             .orElseThrow(() -> new EntityNotFoundException("No appointment with id: " + appointmentId)))
-                    .collect(Collectors.toList()));
+                    .collect(Collectors.toSet()));
         }
 
         return mapper.convertToDto(diagnoseRepository.save(diagnose));

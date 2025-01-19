@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @RequestMapping("/doctors")
@@ -25,7 +25,7 @@ public class DoctorController {
     private final DoctorService doctorService;
 
     @GetMapping("/")
-    public ResponseEntity<List<DoctorDto>> getAllSpecializations() {
+    public ResponseEntity<Set<DoctorDto>> getAllSpecializations() {
         return ResponseEntity.ok(doctorService.getAllDoctors());
     }
 

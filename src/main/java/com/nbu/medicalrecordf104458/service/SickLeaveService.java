@@ -2,11 +2,11 @@ package com.nbu.medicalrecordf104458.service;
 
 import com.nbu.medicalrecordf104458.dto.SickLeaveDto;
 
-import java.util.List;
+import java.util.Set;
 
 public interface SickLeaveService {
 
-    List<SickLeaveDto> getAllSickLeaves();
+    Set<SickLeaveDto> getAllSickLeaves();
 
     SickLeaveDto getSickLeaveById(Long id);
 

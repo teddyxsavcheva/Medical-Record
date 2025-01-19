@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -20,6 +20,6 @@ public class DoctorDto {
     private String name;
 
     @NotEmpty(message = "Doctor should have at least one specialization")
-    private List<Long> specializationIds;
+    private Set<Long> specializationIds;
 
 }

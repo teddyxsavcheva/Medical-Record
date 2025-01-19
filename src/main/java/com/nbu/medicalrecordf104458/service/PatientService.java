@@ -3,11 +3,11 @@ package com.nbu.medicalrecordf104458.service;
 
 import com.nbu.medicalrecordf104458.dto.PatientDto;
 
-import java.util.List;
+import java.util.Set;
 
 public interface PatientService {
 
-    List<PatientDto> getAllPatients();
+    Set<PatientDto> getAllPatients();
 
     PatientDto getPatientById(Long id);
 

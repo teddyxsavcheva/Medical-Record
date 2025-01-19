@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @RequestMapping("/specializations")
@@ -25,7 +25,7 @@ public class SpecializationController {
     private final SpecializationService specializationService;
 
     @GetMapping("/")
-    public ResponseEntity<List<SpecializationDto>> getAllSpecializations() {
+    public ResponseEntity<Set<SpecializationDto>> getAllSpecializations() {
         return ResponseEntity.ok(specializationService.getAllSpecializations());
     }
 

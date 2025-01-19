@@ -2,11 +2,11 @@ package com.nbu.medicalrecordf104458.service;
 
 import com.nbu.medicalrecordf104458.dto.DoctorDto;
 
-import java.util.List;
+import java.util.Set;
 
 public interface DoctorService {
 
-    List<DoctorDto> getAllDoctors();
+    Set<DoctorDto> getAllDoctors();
 
     DoctorDto getDoctorById(Long id);
 

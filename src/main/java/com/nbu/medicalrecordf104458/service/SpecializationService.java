@@ -2,11 +2,11 @@ package com.nbu.medicalrecordf104458.service;
 
 import com.nbu.medicalrecordf104458.dto.SpecializationDto;
 
-import java.util.List;
+import java.util.Set;
 
 public interface SpecializationService {
 
-    List<SpecializationDto> getAllSpecializations();
+    Set<SpecializationDto> getAllSpecializations();
 
     SpecializationDto getSpecializationById(Long id);
 

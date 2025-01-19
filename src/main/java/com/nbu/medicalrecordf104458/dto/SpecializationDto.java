@@ -6,8 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -20,6 +20,6 @@ public class SpecializationDto {
     @NotEmpty(message = "Specialization should have a name")
     private String name;
 
-    private List<Long> doctorIds = new ArrayList<>();
+    private Set<Long> doctorIds = new HashSet<>();
 
 }

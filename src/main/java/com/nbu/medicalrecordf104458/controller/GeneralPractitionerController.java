@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @RequestMapping("/general-practitioners")
@@ -25,7 +25,7 @@ public class GeneralPractitionerController {
     private final GeneralPractitionerService gpService;
 
     @GetMapping("/")
-    public ResponseEntity<List<GeneralPractitionerDto>> getAllDoctors() {
+    public ResponseEntity<Set<GeneralPractitionerDto>> getAllDoctors() {
         return ResponseEntity.ok(gpService.getAllDoctors());
     }
 

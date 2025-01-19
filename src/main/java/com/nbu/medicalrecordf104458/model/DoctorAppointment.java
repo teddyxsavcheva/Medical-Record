@@ -17,8 +17,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -47,10 +47,10 @@ public class DoctorAppointment {
 
     @NotEmpty(message = "An appointment must have at least one diagnose")
     @ManyToMany(mappedBy = "appointments")
-    private List<Diagnose> diagnoses;
+    private Set<Diagnose> diagnoses;
 
     @ManyToMany(mappedBy = "appointments")
-    private List<Treatment> treatments = new ArrayList<>();
+    private Set<Treatment> treatments = new HashSet<>();
 
     @OneToOne
     @JoinColumn(name = "sick_leave_id", unique = true)

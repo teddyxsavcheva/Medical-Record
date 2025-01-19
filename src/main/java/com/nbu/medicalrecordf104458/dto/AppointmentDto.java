@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -29,9 +29,9 @@ public class AppointmentDto {
     private Long doctorId;
 
     @NotEmpty(message = "There must be at least one diagnose for this appointment")
-    private List<Long> diagnoses;
+    private Set<Long> diagnoses;
 
-    private List<Long> treatments = new ArrayList<>();
+    private Set<Long> treatments = new HashSet<>();
 
     private Long sickLeaveId;
 

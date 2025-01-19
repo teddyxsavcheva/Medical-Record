@@ -19,7 +19,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -44,9 +44,9 @@ public class Doctor {
             joinColumns = @JoinColumn(name = "doctor_id"),
             inverseJoinColumns = @JoinColumn(name = "specialization_id", nullable = false)
     )
-    private List<Specialization> specializations;
+    private Set<Specialization> specializations;
 
     @OneToMany(mappedBy = "doctor")
-    private List<DoctorAppointment> appointments;
+    private Set<DoctorAppointment> appointments;
 
 }

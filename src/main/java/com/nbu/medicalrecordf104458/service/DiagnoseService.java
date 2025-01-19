@@ -2,11 +2,11 @@ package com.nbu.medicalrecordf104458.service;
 
 import com.nbu.medicalrecordf104458.dto.DiagnoseDto;
 
-import java.util.List;
+import java.util.Set;
 
 public interface DiagnoseService {
 
-    List<DiagnoseDto> getAllDiagnoses();
+    Set<DiagnoseDto> getAllDiagnoses();
 
     DiagnoseDto getDiagnoseById(Long id);
 

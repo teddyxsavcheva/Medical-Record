@@ -2,11 +2,11 @@ package com.nbu.medicalrecordf104458.service;
 
 import com.nbu.medicalrecordf104458.dto.TreatmentDto;
 
-import java.util.List;
+import java.util.Set;
 
 public interface TreatmentService {
 
-    List<TreatmentDto> getAllTreatments();
+    Set<TreatmentDto> getAllTreatments();
 
     TreatmentDto getTreatmentById(Long id);
 

@@ -7,8 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -19,6 +19,6 @@ public class GeneralPractitioner extends Doctor {
 
     @OneToMany(mappedBy = "familyDoctor")
     // To prevent NullPointerException as GP may not have patients
-    private List<Patient> patients = new ArrayList<>();
+    private Set<Patient> patients = new HashSet<>();
 
 }

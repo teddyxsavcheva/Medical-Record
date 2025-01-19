@@ -6,8 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -20,6 +20,6 @@ public class GeneralPractitionerDto {
     @NotNull(message = "Doctor information is required for GP")
     private DoctorDto doctor;
 
-    private List<Long> patients = new ArrayList<>();
+    private Set<Long> patients = new HashSet<>();
 
 }
