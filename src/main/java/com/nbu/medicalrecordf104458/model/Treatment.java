@@ -14,6 +14,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -45,6 +46,6 @@ public class Treatment {
             joinColumns = @JoinColumn(name = "treatment_id"),
             inverseJoinColumns = @JoinColumn(name = "appointment_id")
     )
-    private List<DoctorAppointment> appointments;
+    private List<DoctorAppointment> appointments = new ArrayList<>();
 
 }
