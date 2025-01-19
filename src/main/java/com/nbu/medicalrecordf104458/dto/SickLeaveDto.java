@@ -22,4 +22,7 @@ public class SickLeaveDto {
     @NotNull(message = "End date of sick leave cannot be null")
     private LocalDate endDate;
 
+    @NotNull(message = "A sick leave must have an appointment")
+    private Long doctorAppointmentId;
+
 }

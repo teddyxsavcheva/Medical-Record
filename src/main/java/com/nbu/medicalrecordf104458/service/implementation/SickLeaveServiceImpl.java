@@ -2,7 +2,9 @@ package com.nbu.medicalrecordf104458.service.implementation;
 
 import com.nbu.medicalrecordf104458.dto.SickLeaveDto;
 import com.nbu.medicalrecordf104458.mapper.SickLeaveMapper;
+import com.nbu.medicalrecordf104458.model.DoctorAppointment;
 import com.nbu.medicalrecordf104458.model.SickLeave;
+import com.nbu.medicalrecordf104458.repository.DoctorAppointmentRepository;
 import com.nbu.medicalrecordf104458.repository.SickLeaveRepository;
 import com.nbu.medicalrecordf104458.service.SickLeaveService;
 import jakarta.persistence.EntityNotFoundException;
@@ -16,9 +18,9 @@ import java.util.stream.Collectors;
 @Service
 public class SickLeaveServiceImpl implements SickLeaveService {
 
+    private final DoctorAppointmentRepository appointmentRepository;
     private final SickLeaveMapper mapper;
     private final SickLeaveRepository repository;
-
 
     @Override
     public List<SickLeaveDto> getAllSickLeaves() {
@@ -49,6 +51,11 @@ public class SickLeaveServiceImpl implements SickLeaveService {
 
         sickLeave.setStartDate(sickLeaveDto.getStartDate());
         sickLeave.setEndDate(sickLeaveDto.getEndDate());
+
+        DoctorAppointment appointment = appointmentRepository.findById(sickLeaveDto.getDoctorAppointmentId())
+                .orElseThrow(() -> new EntityNotFoundException("No Appointment found with id: " + sickLeaveDto.getDoctorAppointmentId()));
+
+        sickLeave.setDoctorAppointment(appointment);
 
         return mapper.convertToDto(repository.save(sickLeave));
     }
