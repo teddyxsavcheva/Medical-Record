@@ -22,7 +22,7 @@ public class DoctorMapper {
         dto.setId(doctor.getId());
         dto.setName(doctor.getName());
 
-        if (!dto.getSpecializationIds().isEmpty()) {
+        if (!doctor.getSpecializations().isEmpty()) {
             dto.setSpecializationIds(doctor.getSpecializations().stream()
                     .map(Specialization::getId)
                     .collect(Collectors.toList()));

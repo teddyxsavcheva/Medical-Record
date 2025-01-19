@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -34,10 +35,6 @@ public class DoctorAppointment {
     @Column(name = "visit_date", nullable = false)
     private LocalDate visitDate;
 
-    @NotEmpty(message = "An appointment must have at least one diagnose")
-    @ManyToMany(mappedBy = "appointments")
-    private List<Diagnose> diagnoses;
-
     @NotNull(message = "An appointment must have a patient")
     @ManyToOne
     @JoinColumn(name = "patient_id", nullable = false)
@@ -48,11 +45,15 @@ public class DoctorAppointment {
     @JoinColumn(name = "doctor_id", nullable = false)
     private Doctor doctor;
 
+    @NotEmpty(message = "An appointment must have at least one diagnose")
+    @ManyToMany(mappedBy = "appointments")
+    private List<Diagnose> diagnoses;
+
+    @ManyToMany(mappedBy = "appointments")
+    private List<Treatment> treatments = new ArrayList<>();
+
     @OneToOne
     @JoinColumn(name = "sick_leave_id", unique = true)
     private SickLeave sickLeave;
-
-    @ManyToMany(mappedBy = "appointments")
-    private List<Treatment> treatments;
 
 }

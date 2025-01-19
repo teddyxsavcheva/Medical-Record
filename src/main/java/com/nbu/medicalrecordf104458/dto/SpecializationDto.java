@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -19,6 +20,6 @@ public class SpecializationDto {
     @NotEmpty(message = "Specialization should have a name")
     private String name;
 
-    private List<Long> doctorIds;
+    private List<Long> doctorIds = new ArrayList<>();
 
 }
