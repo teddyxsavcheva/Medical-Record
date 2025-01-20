@@ -34,7 +34,7 @@ public class Patient {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @NotEmpty(message = "Unified civil number cannot be empty")
+    @NotNull(message = "Unified civil number cannot be empty")
     @Column(name = "unified_civil_number", unique = true, nullable = false)
     private Long unifiedCivilNumber;
 
