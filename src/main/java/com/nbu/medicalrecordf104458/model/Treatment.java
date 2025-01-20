@@ -42,7 +42,7 @@ public class Treatment {
 
     @ManyToMany
     @JoinTable(
-            name = "appointment_treatment",
+            name = "appointments_treatments",
             joinColumns = @JoinColumn(name = "treatment_id"),
             inverseJoinColumns = @JoinColumn(name = "appointment_id")
     )

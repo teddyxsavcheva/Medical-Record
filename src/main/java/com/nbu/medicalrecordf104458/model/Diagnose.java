@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
@@ -35,6 +37,11 @@ public class Diagnose {
     private String description;
 
     @ManyToMany
+    @JoinTable(
+            name = "appointments_diagnoses",
+            joinColumns = @JoinColumn(name = "diagnose_id"),
+            inverseJoinColumns = @JoinColumn(name = "appointment_id")
+    )
     private Set<DoctorAppointment> appointments = new HashSet<>();
 
 }

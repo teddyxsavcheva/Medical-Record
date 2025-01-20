@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
@@ -46,7 +47,12 @@ public class DoctorAppointment {
     private Doctor doctor;
 
     @NotEmpty(message = "An appointment must have at least one diagnose")
-    @ManyToMany(mappedBy = "appointments")
+    @ManyToMany
+    @JoinTable(
+            name = "appointments_diagnoses",
+            joinColumns = @JoinColumn(name = "appointment_id"),
+            inverseJoinColumns = @JoinColumn(name = "diagnose_id")
+    )
     private Set<Diagnose> diagnoses;
 
     @ManyToMany(mappedBy = "appointments")
