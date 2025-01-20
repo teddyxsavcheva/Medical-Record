@@ -22,7 +22,7 @@ public class DiagnoseMapper {
 
         dto.setId(diagnose.getId());
         dto.setName(diagnose.getName());
-        dto.setDescription(dto.getDescription());
+        dto.setDescription(diagnose.getDescription());
 
         if (!diagnose.getAppointments().isEmpty()) {
             dto.setAppointmentIds(diagnose.getAppointments().stream()

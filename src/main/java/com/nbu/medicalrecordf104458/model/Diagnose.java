@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -34,6 +35,6 @@ public class Diagnose {
     private String description;
 
     @ManyToMany
-    private Set<DoctorAppointment> appointments;
+    private Set<DoctorAppointment> appointments = new HashSet<>();
 
 }

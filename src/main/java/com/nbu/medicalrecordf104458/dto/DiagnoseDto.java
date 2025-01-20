@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -24,6 +25,6 @@ public class DiagnoseDto {
     @NotEmpty(message = "Diagnose should have a description")
     private String description;
 
-    private Set<Long> appointmentIds;
+    private Set<Long> appointmentIds = new HashSet<>();
 
 }
