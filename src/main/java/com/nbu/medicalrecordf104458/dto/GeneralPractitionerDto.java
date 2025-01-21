@@ -15,8 +15,6 @@ import java.util.Set;
 @AllArgsConstructor
 public class GeneralPractitionerDto {
 
-    private Long id;
-
     @NotNull(message = "Doctor information is required for GP")
     private DoctorDto doctor;
 

@@ -22,7 +22,6 @@ public class GeneralPractitionerMapper {
     public GeneralPractitionerDto convertToDto(GeneralPractitioner gp) {
         GeneralPractitionerDto dto = new GeneralPractitionerDto();
 
-        dto.setId(gp.getId());
         dto.setDoctor(doctorMapper.convertToDto(gp));
 
         if (!gp.getPatients().isEmpty()) {
@@ -37,7 +36,6 @@ public class GeneralPractitionerMapper {
     public GeneralPractitioner convertToEntity(GeneralPractitionerDto dto) {
         GeneralPractitioner gp = new GeneralPractitioner();
 
-        gp.setId(dto.getId());
         gp.setName(dto.getDoctor().getName());
 
         if (!dto.getDoctor().getSpecializationIds().isEmpty()) {

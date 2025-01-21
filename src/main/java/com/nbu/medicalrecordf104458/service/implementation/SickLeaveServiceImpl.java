@@ -40,7 +40,8 @@ public class SickLeaveServiceImpl implements SickLeaveService {
     @Override
     public SickLeaveDto createSickLeave(SickLeaveDto sickLeaveDto) {
         SickLeave sickLeave = mapper.convertToEntity(sickLeaveDto);
-
+        // To make sure there's no NullPointer Exception, we synchronize them
+        sickLeave.getDoctorAppointment().setSickLeave(sickLeave);
         return mapper.convertToDto(repository.save(sickLeave));
     }
 
