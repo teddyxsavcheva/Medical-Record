@@ -1,7 +1,6 @@
 package com.nbu.medicalrecordf104458.service;
 
 import com.nbu.medicalrecordf104458.dto.AppointmentDto;
-import com.nbu.medicalrecordf104458.dto.DiagnoseDto;
 
 import java.util.Set;
 
@@ -26,7 +25,5 @@ public interface DoctorAppointmentService {
     AppointmentDto addTreatment(Long appointmentId, Long treatmentId);
 
     AppointmentDto removeTreatment(Long appointmentId, Long treatmentId);
-
-    Set<DiagnoseDto> findMostCommonDiagnoses();
 
 }

@@ -57,18 +57,25 @@ public class DiagnoseController {
 
     // Add/Remove Appointments in many-to-many table
 
-    @PostMapping("/{diagnoseId}/appointments/{appointmentId}/")
+    @PostMapping("/{diagnoseId}/appointments/{appointmentId}")
     public ResponseEntity<DiagnoseDto> addAppointment(@PathVariable Long diagnoseId, @PathVariable Long appointmentId) {
         DiagnoseDto updatedDto = diagnoseService.addAppointment(diagnoseId, appointmentId);
 
         return ResponseEntity.ok(updatedDto);
     }
 
-    @DeleteMapping("/{diagnoseId}/appointments/{appointmentId}/")
+    @DeleteMapping("/{diagnoseId}/appointments/{appointmentId}")
     public ResponseEntity<DiagnoseDto> removeAppointment(@PathVariable Long diagnoseId, @PathVariable Long appointmentId) {
         DiagnoseDto updatedDto = diagnoseService.removeAppointment(diagnoseId, appointmentId);
 
         return ResponseEntity.ok(updatedDto);
+    }
+
+    // Queries
+
+    @GetMapping("/most-common-diagnoses")
+    public Set<DiagnoseDto> getMostCommonDiagnoses() {
+        return diagnoseService.findMostCommonDiagnoses();
     }
 
 }

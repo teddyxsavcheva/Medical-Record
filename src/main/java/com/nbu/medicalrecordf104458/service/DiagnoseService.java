@@ -20,4 +20,7 @@ public interface DiagnoseService {
 
     DiagnoseDto removeAppointment(Long diagnoseId, Long appointmentId);
 
+    // Queries
+    Set<DiagnoseDto> findMostCommonDiagnoses();
+
 }

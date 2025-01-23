@@ -11,6 +11,9 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -94,6 +97,38 @@ public class DiagnoseServiceImpl implements DiagnoseService {
         diagnose.getAppointments().remove(appointment);
 
         return mapper.convertToDto(diagnoseRepository.save(diagnose));
+    }
+
+    // Queries
+    @Override
+    public Set<DiagnoseDto> findMostCommonDiagnoses() {
+        Set<Diagnose> diagnoses = new HashSet<>(diagnoseRepository.findAll());
+
+        Map<Long, Integer> diagnoseCountMap = new HashMap<>();
+        int maxCount = 0;
+
+        for (Diagnose diagnose : diagnoses) {
+            int count = diagnose.getAppointments().size();
+            diagnoseCountMap.put(diagnose.getId(), diagnoseCountMap.getOrDefault(diagnose.getId(), 0) + count);
+
+            maxCount = Math.max(maxCount, diagnoseCountMap.get(diagnose.getId()));
+        }
+
+        Set<DiagnoseDto> mostCommon = new HashSet<>();
+
+        for (Diagnose diagnose : diagnoses) {
+            if (diagnoseCountMap.get(diagnose.getId()) == maxCount) {
+                DiagnoseDto dto = new DiagnoseDto(
+                        diagnose.getId(),
+                        diagnose.getName(),
+                        diagnose.getDescription(),
+                        diagnose.getAppointments().stream().map(DoctorAppointment::getId).collect(Collectors.toSet())
+                );
+                mostCommon.add(dto);
+            }
+        }
+
+        return mostCommon;
     }
 
 }
