@@ -2,9 +2,7 @@ package com.nbu.medicalrecordf104458.service.implementation;
 
 import com.nbu.medicalrecordf104458.dto.AppointmentDto;
 import com.nbu.medicalrecordf104458.dto.DiagnoseDto;
-import com.nbu.medicalrecordf104458.dto.PatientDto;
 import com.nbu.medicalrecordf104458.mapper.DoctorAppointmentMapper;
-import com.nbu.medicalrecordf104458.mapper.PatientMapper;
 import com.nbu.medicalrecordf104458.model.Diagnose;
 import com.nbu.medicalrecordf104458.model.DoctorAppointment;
 import com.nbu.medicalrecordf104458.model.Treatment;
@@ -36,7 +34,6 @@ public class DoctorAppointmentServiceImpl implements DoctorAppointmentService {
     private final SickLeaveRepository sickLeaveRepository;
     private final DoctorAppointmentRepository appointmentRepository;
     private final DoctorAppointmentMapper mapper;
-    private final PatientMapper patientMapper;
 
     @Override
     public Set<AppointmentDto> getAllAppointments() {
@@ -156,13 +153,6 @@ public class DoctorAppointmentServiceImpl implements DoctorAppointmentService {
     }
 
     // Queries
-
-    @Override
-    public Set<PatientDto> getPatientsByDiagnoseId(Long diagnoseId) {
-        return appointmentRepository.findPatientsByDiagnoseId(diagnoseId).stream()
-                .map(patientMapper::convertToDto)
-                .collect(Collectors.toSet());
-    }
 
     @Override
     public Set<DiagnoseDto> findMostCommonDiagnoses() {

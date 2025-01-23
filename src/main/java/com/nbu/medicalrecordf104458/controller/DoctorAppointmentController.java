@@ -2,7 +2,6 @@ package com.nbu.medicalrecordf104458.controller;
 
 import com.nbu.medicalrecordf104458.dto.AppointmentDto;
 import com.nbu.medicalrecordf104458.dto.DiagnoseDto;
-import com.nbu.medicalrecordf104458.dto.PatientDto;
 import com.nbu.medicalrecordf104458.service.DoctorAppointmentService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -84,12 +83,6 @@ public class DoctorAppointmentController {
     }
 
     // Queries
-
-    @GetMapping("/patients-by-diagnose/{diagnoseId}")
-    public ResponseEntity<Set<PatientDto>> getPatientsByDiagnose(@PathVariable Long diagnoseId) {
-        Set<PatientDto> patients = appointmentService.getPatientsByDiagnoseId(diagnoseId);
-        return ResponseEntity.ok(patients);
-    }
 
     @GetMapping("/most-common-diagnoses")
     public Set<DiagnoseDto> getMostCommonDiagnoses() {

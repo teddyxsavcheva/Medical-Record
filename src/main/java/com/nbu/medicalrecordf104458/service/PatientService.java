@@ -19,4 +19,7 @@ public interface PatientService {
 
     boolean isInsurancePaidLast6Months(Long patientId);
 
+    // Queries
+    Set<PatientDto> getPatientsByDiagnoseId(Long diagnoseId);
+
 }

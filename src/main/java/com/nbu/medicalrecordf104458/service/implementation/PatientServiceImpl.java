@@ -85,4 +85,13 @@ public class PatientServiceImpl implements PatientService {
         return monthsBetween <= 6;
     }
 
+    // Queries
+
+    @Override
+    public Set<PatientDto> getPatientsByDiagnoseId(Long diagnoseId) {
+        return patientRepository.findPatientsByDiagnoseId(diagnoseId).stream()
+                .map(mapper::convertToDto)
+                .collect(Collectors.toSet());
+    }
+
 }

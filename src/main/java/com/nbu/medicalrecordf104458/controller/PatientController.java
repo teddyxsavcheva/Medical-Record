@@ -66,4 +66,10 @@ public class PatientController {
         }
     }
 
+    @GetMapping("/patients-by-diagnose/{diagnoseId}")
+    public ResponseEntity<Set<PatientDto>> getPatientsByDiagnose(@PathVariable Long diagnoseId) {
+        Set<PatientDto> patients = patientService.getPatientsByDiagnoseId(diagnoseId);
+        return ResponseEntity.ok(patients);
+    }
+
 }
