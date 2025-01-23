@@ -1,7 +1,9 @@
 package com.nbu.medicalrecordf104458.service.implementation;
 
 import com.nbu.medicalrecordf104458.dto.AppointmentDto;
+import com.nbu.medicalrecordf104458.dto.PatientDto;
 import com.nbu.medicalrecordf104458.mapper.DoctorAppointmentMapper;
+import com.nbu.medicalrecordf104458.mapper.PatientMapper;
 import com.nbu.medicalrecordf104458.model.Diagnose;
 import com.nbu.medicalrecordf104458.model.DoctorAppointment;
 import com.nbu.medicalrecordf104458.model.Treatment;
@@ -30,6 +32,7 @@ public class DoctorAppointmentServiceImpl implements DoctorAppointmentService {
     private final SickLeaveRepository sickLeaveRepository;
     private final DoctorAppointmentRepository appointmentRepository;
     private final DoctorAppointmentMapper mapper;
+    private final PatientMapper patientMapper;
 
     @Override
     public Set<AppointmentDto> getAllAppointments() {
@@ -94,6 +97,8 @@ public class DoctorAppointmentServiceImpl implements DoctorAppointmentService {
         appointmentRepository.delete(appointment);
     }
 
+    // Add/Remove methods for Treatment and Diagnose  many-to-many table
+
     @Override
     public AppointmentDto addDiagnose(Long appointmentId, Long diagnoseId) {
         DoctorAppointment appointment = appointmentRepository.findById(appointmentId)
@@ -144,6 +149,15 @@ public class DoctorAppointmentServiceImpl implements DoctorAppointmentService {
         appointment.getTreatments().remove(treatment);
 
         return mapper.convertToDto(appointmentRepository.save(appointment));
+    }
+
+    // Queries
+
+    @Override
+    public Set<PatientDto> getPatientsByDiagnoseId(Long diagnoseId) {
+        return appointmentRepository.findPatientsByDiagnoseId(diagnoseId).stream()
+                .map(patientMapper::convertToDto)
+                .collect(Collectors.toSet());
     }
 
 }

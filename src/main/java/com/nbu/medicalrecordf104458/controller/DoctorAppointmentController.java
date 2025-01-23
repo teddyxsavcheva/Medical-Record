@@ -1,6 +1,7 @@
 package com.nbu.medicalrecordf104458.controller;
 
 import com.nbu.medicalrecordf104458.dto.AppointmentDto;
+import com.nbu.medicalrecordf104458.dto.PatientDto;
 import com.nbu.medicalrecordf104458.service.DoctorAppointmentService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -80,4 +81,13 @@ public class DoctorAppointmentController {
         AppointmentDto updatedAppointment = appointmentService.removeTreatment(appointmentId, treatmentId);
         return ResponseEntity.ok(updatedAppointment);
     }
+
+    // Queries
+
+    @GetMapping("/patients-by-diagnose/{diagnoseId}")
+    public ResponseEntity<Set<PatientDto>> getPatientsByDiagnose(@PathVariable Long diagnoseId) {
+        Set<PatientDto> patients = appointmentService.getPatientsByDiagnoseId(diagnoseId);
+        return ResponseEntity.ok(patients);
+    }
+
 }

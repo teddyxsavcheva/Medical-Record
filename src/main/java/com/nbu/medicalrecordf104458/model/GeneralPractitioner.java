@@ -18,7 +18,6 @@ import java.util.Set;
 public class GeneralPractitioner extends Doctor {
 
     @OneToMany(mappedBy = "familyDoctor")
-    // To prevent NullPointerException as GP may not have patients
     private Set<Patient> patients = new HashSet<>();
 
 }
