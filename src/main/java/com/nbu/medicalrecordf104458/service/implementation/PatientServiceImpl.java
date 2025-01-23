@@ -94,4 +94,11 @@ public class PatientServiceImpl implements PatientService {
                 .collect(Collectors.toSet());
     }
 
+    @Override
+    public Set<PatientDto> getPatientsByGeneralPractitioner(Long gpId) {
+        return patientRepository.findPatientsByGeneralPractitionerId(gpId).stream()
+                .map(mapper::convertToDto)
+                .collect(Collectors.toSet());
+    }
+
 }

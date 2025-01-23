@@ -12,5 +12,4 @@ public interface GeneralPractitionerRepository extends JpaRepository<GeneralPrac
     @Query("SELECT COUNT(p) FROM GeneralPractitioner gp JOIN gp.patients p WHERE gp.id = :gpId")
     Long countPatientsByGPId(@Param("gpId") Long gpId);
 
-
 }

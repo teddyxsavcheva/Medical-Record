@@ -72,4 +72,10 @@ public class PatientController {
         return ResponseEntity.ok(patients);
     }
 
+    @GetMapping("/patients-by-gp/{gpId}")
+    public ResponseEntity<Set<PatientDto>> getPatientsByGeneralPractitioner(@PathVariable Long gpId) {
+        Set<PatientDto> patients = patientService.getPatientsByGeneralPractitioner(gpId);
+        return ResponseEntity.ok(patients);
+    }
+
 }

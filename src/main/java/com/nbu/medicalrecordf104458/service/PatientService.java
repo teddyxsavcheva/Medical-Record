@@ -1,7 +1,7 @@
 package com.nbu.medicalrecordf104458.service;
 
-
 import com.nbu.medicalrecordf104458.dto.PatientDto;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Set;
 
@@ -21,5 +21,7 @@ public interface PatientService {
 
     // Queries
     Set<PatientDto> getPatientsByDiagnoseId(Long diagnoseId);
+
+    Set<PatientDto> getPatientsByGeneralPractitioner(@Param("gpId") Long gpId);
 
 }

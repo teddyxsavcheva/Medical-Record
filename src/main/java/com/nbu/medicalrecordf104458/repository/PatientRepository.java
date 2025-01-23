@@ -14,4 +14,7 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
     @Query("SELECT appointment.patient FROM DoctorAppointment appointment JOIN appointment.diagnoses diagnose WHERE diagnose.id = :diagnoseId")
     Set<Patient> findPatientsByDiagnoseId(@Param("diagnoseId") Long diagnoseId);
 
+    @Query("SELECT patient FROM Patient patient WHERE patient.familyDoctor.id = :gpId")
+    Set<Patient> findPatientsByGeneralPractitionerId(@Param("gpId") Long gpId);
+
 }
