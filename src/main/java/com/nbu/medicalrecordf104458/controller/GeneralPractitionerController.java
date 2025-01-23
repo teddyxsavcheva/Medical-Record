@@ -85,4 +85,11 @@ public class GeneralPractitionerController {
         return ResponseEntity.ok(updatedDto);
     }
 
+    // Queries
+
+    @GetMapping("/{gpId}/patients-count")
+    public ResponseEntity<Long> getPatientsCountByGPId(@PathVariable Long gpId) {
+        return ResponseEntity.ok(gpService.getPatientsCountByGPId(gpId));
+    }
+
 }

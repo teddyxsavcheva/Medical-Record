@@ -130,4 +130,10 @@ public class GeneralPractitionerServiceImpl implements GeneralPractitionerServic
 
         return gpMapper.convertToDto(gpRepository.save(gp));
     }
+
+    @Override
+    public Long getPatientsCountByGPId(Long gpId) {
+        return gpRepository.countPatientsByGPId(gpId);
+    }
+
 }

@@ -16,13 +16,18 @@ public interface GeneralPractitionerService {
 
     void deleteDoctor(Long id);
 
-    GeneralPractitionerDto addSpecialization(Long gpDto, Long specializationId);
+    // Add/Remove methods for Patient and Specialization many-to-many tables
 
-    GeneralPractitionerDto removeSpecialization(Long gpDto, Long specializationId);
+    GeneralPractitionerDto addSpecialization(Long gpId, Long specializationId);
 
-    GeneralPractitionerDto addPatient(Long gpDto, Long patientId);
+    GeneralPractitionerDto removeSpecialization(Long gpId, Long specializationId);
 
-    GeneralPractitionerDto removePatient(Long gpDto, Long patientId);
+    GeneralPractitionerDto addPatient(Long gpId, Long patientId);
 
+    GeneralPractitionerDto removePatient(Long gpId, Long patientId);
+
+    // Queries
+
+    Long getPatientsCountByGPId(Long gpId);
 
 }
