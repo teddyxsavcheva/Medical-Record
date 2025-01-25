@@ -4,6 +4,7 @@ import com.nbu.medicalrecordf104458.dto.PatientDto;
 import com.nbu.medicalrecordf104458.mapper.PatientMapper;
 import com.nbu.medicalrecordf104458.model.GeneralPractitioner;
 import com.nbu.medicalrecordf104458.model.Patient;
+import com.nbu.medicalrecordf104458.repository.DiagnoseRepository;
 import com.nbu.medicalrecordf104458.repository.GeneralPractitionerRepository;
 import com.nbu.medicalrecordf104458.repository.PatientRepository;
 import com.nbu.medicalrecordf104458.service.PatientService;
@@ -23,6 +24,7 @@ public class PatientServiceImpl implements PatientService {
     private final PatientMapper mapper;
     private final PatientRepository patientRepository;
     private final GeneralPractitionerRepository gpRepository;
+    private final DiagnoseRepository diagnoseRepository;
 
     @Override
     public Set<PatientDto> getAllPatients() {
@@ -89,6 +91,10 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public Set<PatientDto> getPatientsByDiagnoseId(Long diagnoseId) {
+        if (!diagnoseRepository.existsById(diagnoseId)) {
+            throw new EntityNotFoundException("No Diagnose with id: " + diagnoseId);
+        }
+
         return patientRepository.findPatientsByDiagnoseId(diagnoseId).stream()
                 .map(mapper::convertToDto)
                 .collect(Collectors.toSet());
@@ -96,6 +102,10 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public Set<PatientDto> getPatientsByGeneralPractitioner(Long gpId) {
+        if (!gpRepository.existsById(gpId)) {
+            throw new EntityNotFoundException("No GP with id: " + gpId);
+        }
+
         return patientRepository.findPatientsByGeneralPractitionerId(gpId).stream()
                 .map(mapper::convertToDto)
                 .collect(Collectors.toSet());

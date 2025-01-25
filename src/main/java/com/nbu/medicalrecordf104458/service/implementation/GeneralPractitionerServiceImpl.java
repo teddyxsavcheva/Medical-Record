@@ -139,6 +139,10 @@ public class GeneralPractitionerServiceImpl implements GeneralPractitionerServic
 
     @Override
     public GpPatientsCountDto getGeneralPractitionerWithPatientCount(Long gpId) {
+        if (!gpRepository.existsById(gpId)) {
+            throw new EntityNotFoundException("No GP with id: " + gpId);
+        }
+
         return gpRepository.findGeneralPractitionerWithPatientCount(gpId);
     }
 

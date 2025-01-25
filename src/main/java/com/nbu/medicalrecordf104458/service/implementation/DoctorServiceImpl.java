@@ -104,6 +104,10 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public DoctorAppointmentsCountDto getDoctorWithAppointmentCount(Long doctorId) {
+        if (!doctorRepository.existsById(doctorId)) {
+            throw new EntityNotFoundException("No Doctor with id: " + doctorId);
+        }
+
         return doctorRepository.findDoctorWithAppointmentCount(doctorId);
     }
 
