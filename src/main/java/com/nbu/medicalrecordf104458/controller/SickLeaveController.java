@@ -55,4 +55,10 @@ public class SickLeaveController {
         return ResponseEntity.ok(HttpStatus.NO_CONTENT);
     }
 
+    @GetMapping("/most-common-sick-leave-month")
+    public ResponseEntity<String> getMostCommonSickLeaveMonth() {
+        String result = sickLeaveService.getMonthWithMostSickLeaves();
+        return ResponseEntity.ok(result);
+    }
+
 }

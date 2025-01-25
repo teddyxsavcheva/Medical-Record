@@ -16,4 +16,7 @@ public interface SickLeaveService {
 
     void deleteSickLeave(Long id);
 
+    // Queries
+    String getMonthWithMostSickLeaves();
+
 }
