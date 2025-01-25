@@ -26,4 +26,6 @@ public interface DoctorService {
 
     DoctorAppointmentsCountDto getDoctorWithAppointmentCount(Long doctorId);
 
+    Set<DoctorDto> findDoctorsWithMostSickLeaves();
+
 }

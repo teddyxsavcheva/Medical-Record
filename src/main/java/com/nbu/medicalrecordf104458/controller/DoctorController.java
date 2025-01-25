@@ -83,4 +83,10 @@ public class DoctorController {
         return ResponseEntity.ok(doctorService.getDoctorWithAppointmentCount(id));
     }
 
+    @GetMapping("/doctors-with-most-sick-leaves")
+    public ResponseEntity<Set<DoctorDto>> getDoctorsWithMostSickLeaves() {
+        Set<DoctorDto> doctors = doctorService.findDoctorsWithMostSickLeaves();
+        return ResponseEntity.ok(doctors);
+    }
+
 }

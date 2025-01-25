@@ -12,6 +12,9 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -109,6 +112,43 @@ public class DoctorServiceImpl implements DoctorService {
         }
 
         return doctorRepository.findDoctorWithAppointmentCount(doctorId);
+    }
+
+    @Override
+    public Set<DoctorDto> findDoctorsWithMostSickLeaves() {
+        Set<Doctor> doctors = new HashSet<>(doctorRepository.findAll());
+
+        Map<Long, Integer> doctorSickLeaveCountMap = new HashMap<>();
+        int maxSickLeaveCount = 0;
+
+        for (Doctor doctor : doctors) {
+            int sickLeaveCount = (int) doctor.getAppointments().stream()
+                    .filter(appointment -> appointment.getSickLeave() != null)
+                    .count();
+
+            doctorSickLeaveCountMap.put(doctor.getId(), sickLeaveCount);
+
+            maxSickLeaveCount = Math.max(maxSickLeaveCount, sickLeaveCount);
+        }
+
+        Set<DoctorDto> doctorsWithMostSickLeaves = new HashSet<>();
+        for (Map.Entry<Long, Integer> entry : doctorSickLeaveCountMap.entrySet()) {
+            if (entry.getValue() == maxSickLeaveCount) {
+                Doctor doctor = doctorRepository.findById(entry.getKey())
+                        .orElseThrow(() -> new EntityNotFoundException("Doctor not found"));
+
+                DoctorDto dto = new DoctorDto(
+                        doctor.getId(),
+                        doctor.getName(),
+                        doctor.getSpecializations().stream()
+                                .map(Specialization::getId)
+                                .collect(Collectors.toSet())
+                );
+                doctorsWithMostSickLeaves.add(dto);
+            }
+        }
+
+        return doctorsWithMostSickLeaves;
     }
 
 }
