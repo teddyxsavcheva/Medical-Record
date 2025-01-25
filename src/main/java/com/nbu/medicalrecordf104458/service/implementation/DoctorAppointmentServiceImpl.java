@@ -16,6 +16,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -148,6 +149,14 @@ public class DoctorAppointmentServiceImpl implements DoctorAppointmentService {
         treatment.getAppointments().remove(appointment);
 
         return mapper.convertToDto(appointmentRepository.save(appointment));
+    }
+
+    // Queries
+    @Override
+    public Set<AppointmentDto> findVisitsByDateRange(LocalDate startDate, LocalDate endDate) {
+        return appointmentRepository.findVisitsByDateRange(startDate, endDate).stream()
+                .map(mapper::convertToDto)
+                .collect(Collectors.toSet());
     }
 
 }

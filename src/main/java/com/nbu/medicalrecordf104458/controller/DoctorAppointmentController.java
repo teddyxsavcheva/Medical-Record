@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -54,7 +55,6 @@ public class DoctorAppointmentController {
     }
 
     // Add/Remove methods for Diagnose many-to-many table
-
     @PostMapping("/{appointmentId}/diagnoses/{diagnoseId}")
     public ResponseEntity<AppointmentDto> addDiagnose(@PathVariable Long appointmentId, @PathVariable Long diagnoseId) {
         AppointmentDto updatedAppointment = appointmentService.addDiagnose(appointmentId, diagnoseId);
@@ -68,7 +68,6 @@ public class DoctorAppointmentController {
     }
 
     // Add/Remove methods for Treatment many-to-many table
-
     @PostMapping("/{appointmentId}/treatments/{treatmentId}")
     public ResponseEntity<AppointmentDto> addTreatment(@PathVariable Long appointmentId, @PathVariable Long treatmentId) {
         AppointmentDto updatedAppointment = appointmentService.addTreatment(appointmentId, treatmentId);
@@ -79,6 +78,12 @@ public class DoctorAppointmentController {
     public ResponseEntity<AppointmentDto> removeTreatment(@PathVariable Long appointmentId, @PathVariable Long treatmentId) {
         AppointmentDto updatedAppointment = appointmentService.removeTreatment(appointmentId, treatmentId);
         return ResponseEntity.ok(updatedAppointment);
+    }
+
+    // Queries
+    @GetMapping("/between-dates/{startDate}/{endDate}")
+    public ResponseEntity<Set<AppointmentDto>> getAppointmentsBetweenDates(@PathVariable LocalDate startDate, @PathVariable LocalDate endDate) {
+        return ResponseEntity.ok(appointmentService.findVisitsByDateRange(startDate, endDate));
     }
 
 }

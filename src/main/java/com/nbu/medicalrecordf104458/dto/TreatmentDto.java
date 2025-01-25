@@ -28,5 +28,4 @@ public class TreatmentDto {
 
     private Set<Long> appointmentIds = new HashSet<>();
 
-
 }
