@@ -1,6 +1,8 @@
 package com.nbu.medicalrecordf104458.service.implementation;
 
+import com.nbu.medicalrecordf104458.dto.AppointmentDto;
 import com.nbu.medicalrecordf104458.dto.PatientDto;
+import com.nbu.medicalrecordf104458.mapper.DoctorAppointmentMapper;
 import com.nbu.medicalrecordf104458.mapper.PatientMapper;
 import com.nbu.medicalrecordf104458.model.GeneralPractitioner;
 import com.nbu.medicalrecordf104458.model.Patient;
@@ -22,6 +24,7 @@ import java.util.stream.Collectors;
 public class PatientServiceImpl implements PatientService {
 
     private final PatientMapper mapper;
+    private final DoctorAppointmentMapper appointmentMapper;
     private final PatientRepository patientRepository;
     private final GeneralPractitionerRepository gpRepository;
     private final DiagnoseRepository diagnoseRepository;
@@ -108,6 +111,17 @@ public class PatientServiceImpl implements PatientService {
 
         return patientRepository.findPatientsByGeneralPractitionerId(gpId).stream()
                 .map(mapper::convertToDto)
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<AppointmentDto> getVisitsByPatient(Long patientId) {
+        if (!patientRepository.existsById(patientId)) {
+            throw new EntityNotFoundException("No Patient found with id: " + patientId);
+        }
+
+        return patientRepository.findVisitsByPatientId(patientId).stream()
+                .map(appointmentMapper::convertToDto)
                 .collect(Collectors.toSet());
     }
 

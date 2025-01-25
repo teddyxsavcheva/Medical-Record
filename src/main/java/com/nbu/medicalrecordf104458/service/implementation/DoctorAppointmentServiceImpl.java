@@ -131,6 +131,7 @@ public class DoctorAppointmentServiceImpl implements DoctorAppointmentService {
                 .orElseThrow(() -> new EntityNotFoundException("No Treatment found with id: " + treatmentId));
 
         appointment.getTreatments().add(treatment);
+        treatment.getAppointments().add(appointment);
 
         return mapper.convertToDto(appointmentRepository.save(appointment));
     }
@@ -144,6 +145,7 @@ public class DoctorAppointmentServiceImpl implements DoctorAppointmentService {
                 .orElseThrow(() -> new EntityNotFoundException("No Treatment found with id: " + treatmentId));
 
         appointment.getTreatments().remove(treatment);
+        treatment.getAppointments().remove(appointment);
 
         return mapper.convertToDto(appointmentRepository.save(appointment));
     }
