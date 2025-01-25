@@ -74,8 +74,8 @@ public class DiagnoseController {
     // Queries
 
     @GetMapping("/most-common-diagnoses")
-    public Set<DiagnoseDto> getMostCommonDiagnoses() {
-        return diagnoseService.findMostCommonDiagnoses();
+    public ResponseEntity<Set<DiagnoseDto>> getMostCommonDiagnoses() {
+        return ResponseEntity.ok(diagnoseService.findMostCommonDiagnoses());
     }
 
 }

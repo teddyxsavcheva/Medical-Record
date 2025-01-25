@@ -1,5 +1,6 @@
 package com.nbu.medicalrecordf104458.service.implementation;
 
+import com.nbu.medicalrecordf104458.dto.queries.DoctorAppointmentsCountDto;
 import com.nbu.medicalrecordf104458.dto.DoctorDto;
 import com.nbu.medicalrecordf104458.mapper.DoctorMapper;
 import com.nbu.medicalrecordf104458.model.Doctor;
@@ -94,4 +95,16 @@ public class DoctorServiceImpl implements DoctorService {
 
         return mapper.convertToDto(doctorRepository.save(doctor));
     }
+
+    // Queries
+    @Override
+    public Set<DoctorAppointmentsCountDto> getAllDoctorsWithAppointmentCount() {
+        return doctorRepository.findAllDoctorsWithAppointmentCount();
+    }
+
+    @Override
+    public DoctorAppointmentsCountDto getDoctorWithAppointmentCount(Long doctorId) {
+        return doctorRepository.findDoctorWithAppointmentCount(doctorId);
+    }
+
 }

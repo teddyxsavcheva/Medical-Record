@@ -1,6 +1,7 @@
 package com.nbu.medicalrecordf104458.controller;
 
 import com.nbu.medicalrecordf104458.dto.GeneralPractitionerDto;
+import com.nbu.medicalrecordf104458.dto.queries.GpPatientsCountDto;
 import com.nbu.medicalrecordf104458.service.GeneralPractitionerService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -87,9 +88,14 @@ public class GeneralPractitionerController {
 
     // Queries
 
-    @GetMapping("/{gpId}/patients-count")
-    public ResponseEntity<Long> getPatientsCountByGPId(@PathVariable Long gpId) {
-        return ResponseEntity.ok(gpService.getPatientsCountByGPId(gpId));
+    @GetMapping("/patients-count")
+    public ResponseEntity<Set<GpPatientsCountDto>> getAllGeneralPractitionersWithPatientCount() {
+        return ResponseEntity.ok(gpService.getAllGeneralPractitionersWithPatientCount());
+    }
+
+    @GetMapping("/{id}/patients-count")
+    public ResponseEntity<GpPatientsCountDto> getGeneralPractitionerWithPatientCount(@PathVariable Long id) {
+        return ResponseEntity.ok(gpService.getGeneralPractitionerWithPatientCount(id));
     }
 
 }

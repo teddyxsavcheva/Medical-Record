@@ -1,5 +1,6 @@
 package com.nbu.medicalrecordf104458.controller;
 
+import com.nbu.medicalrecordf104458.dto.queries.DoctorAppointmentsCountDto;
 import com.nbu.medicalrecordf104458.dto.DoctorDto;
 import com.nbu.medicalrecordf104458.service.DoctorService;
 import jakarta.validation.Valid;
@@ -69,6 +70,17 @@ public class DoctorController {
         DoctorDto updatedDto = doctorService.removeSpecialization(doctorId, specializationId);
 
         return ResponseEntity.ok(updatedDto);
+    }
+
+    // Queries
+    @GetMapping("/appointments-count")
+    public ResponseEntity<Set<DoctorAppointmentsCountDto>> getAllDoctorsWithAppointmentCount() {
+        return ResponseEntity.ok(doctorService.getAllDoctorsWithAppointmentCount());
+    }
+
+    @GetMapping("/{id}/appointments-count")
+    public ResponseEntity<DoctorAppointmentsCountDto> getDoctorWithAppointmentCount(@PathVariable Long id) {
+        return ResponseEntity.ok(doctorService.getDoctorWithAppointmentCount(id));
     }
 
 }

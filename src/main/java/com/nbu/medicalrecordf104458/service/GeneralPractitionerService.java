@@ -1,6 +1,7 @@
 package com.nbu.medicalrecordf104458.service;
 
 import com.nbu.medicalrecordf104458.dto.GeneralPractitionerDto;
+import com.nbu.medicalrecordf104458.dto.queries.GpPatientsCountDto;
 
 import java.util.Set;
 
@@ -27,7 +28,8 @@ public interface GeneralPractitionerService {
     GeneralPractitionerDto removePatient(Long gpId, Long patientId);
 
     // Queries
+    Set<GpPatientsCountDto> getAllGeneralPractitionersWithPatientCount();
 
-    Long getPatientsCountByGPId(Long gpId);
+    GpPatientsCountDto getGeneralPractitionerWithPatientCount(Long gpId);
 
 }

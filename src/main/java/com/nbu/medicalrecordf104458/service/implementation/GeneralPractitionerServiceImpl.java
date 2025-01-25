@@ -1,6 +1,7 @@
 package com.nbu.medicalrecordf104458.service.implementation;
 
 import com.nbu.medicalrecordf104458.dto.GeneralPractitionerDto;
+import com.nbu.medicalrecordf104458.dto.queries.GpPatientsCountDto;
 import com.nbu.medicalrecordf104458.mapper.GeneralPractitionerMapper;
 import com.nbu.medicalrecordf104458.model.GeneralPractitioner;
 import com.nbu.medicalrecordf104458.model.Patient;
@@ -132,8 +133,13 @@ public class GeneralPractitionerServiceImpl implements GeneralPractitionerServic
     }
 
     @Override
-    public Long getPatientsCountByGPId(Long gpId) {
-        return gpRepository.countPatientsByGPId(gpId);
+    public Set<GpPatientsCountDto> getAllGeneralPractitionersWithPatientCount() {
+        return gpRepository.findAllDoctorsWithPatientCount();
+    }
+
+    @Override
+    public GpPatientsCountDto getGeneralPractitionerWithPatientCount(Long gpId) {
+        return gpRepository.findGeneralPractitionerWithPatientCount(gpId);
     }
 
 }
