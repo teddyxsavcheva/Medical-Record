@@ -86,4 +86,9 @@ public class DoctorAppointmentController {
         return ResponseEntity.ok(appointmentService.findVisitsByDateRange(startDate, endDate));
     }
 
+    @GetMapping("/doctor-and-between-dates/{doctorId}/{startDate}/{endDate}")
+    public ResponseEntity<Set<AppointmentDto>> getAppointmentsByDoctorAndDateRange(@PathVariable Long doctorId, @PathVariable LocalDate startDate, @PathVariable LocalDate endDate) {
+        return ResponseEntity.ok(appointmentService.findAppointmentsByDoctorAndDateRange(doctorId, startDate, endDate));
+    }
+
 }

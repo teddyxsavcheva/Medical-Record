@@ -29,4 +29,6 @@ public interface DoctorAppointmentService {
     // Queries
     Set<AppointmentDto> findVisitsByDateRange(LocalDate startDate, LocalDate endDate);
 
+    Set<AppointmentDto> findAppointmentsByDoctorAndDateRange(Long doctorId, LocalDate startDate, LocalDate endDate);
+
 }

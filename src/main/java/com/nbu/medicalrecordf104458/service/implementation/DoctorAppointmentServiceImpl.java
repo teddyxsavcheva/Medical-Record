@@ -159,4 +159,11 @@ public class DoctorAppointmentServiceImpl implements DoctorAppointmentService {
                 .collect(Collectors.toSet());
     }
 
+    @Override
+    public Set<AppointmentDto> findAppointmentsByDoctorAndDateRange(Long doctorId, LocalDate startDate, LocalDate endDate) {
+        return appointmentRepository.findAppointmentsByDoctorAndDateRange(doctorId, startDate, endDate).stream()
+                .map(mapper::convertToDto)
+                .collect(Collectors.toSet());
+    }
+
 }

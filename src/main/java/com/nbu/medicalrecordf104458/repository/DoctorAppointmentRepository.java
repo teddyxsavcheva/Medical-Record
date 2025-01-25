@@ -16,4 +16,11 @@ public interface DoctorAppointmentRepository extends JpaRepository<DoctorAppoint
     @Query("SELECT a FROM DoctorAppointment a WHERE a.visitDate BETWEEN :startDate AND :endDate")
     Set<DoctorAppointment> findVisitsByDateRange(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
+    // h.
+    @Query("SELECT a FROM DoctorAppointment a WHERE a.doctor.id = :doctorId AND a.visitDate BETWEEN :startDate AND :endDate")
+    Set<DoctorAppointment> findAppointmentsByDoctorAndDateRange(
+            @Param("doctorId") Long doctorId,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate);
+
 }
