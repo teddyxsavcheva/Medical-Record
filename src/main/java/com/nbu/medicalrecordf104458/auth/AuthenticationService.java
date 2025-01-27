@@ -1,7 +1,6 @@
 package com.nbu.medicalrecordf104458.auth;
 
 import com.nbu.medicalrecordf104458.config.JwtService;
-import com.nbu.medicalrecordf104458.model.user.Role;
 import com.nbu.medicalrecordf104458.model.user.User;
 import com.nbu.medicalrecordf104458.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +25,7 @@ public class AuthenticationService {
                 .lastName(request.getLastName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.USER)
+                .role(request.getRole())
                 .build();
         repository.save(user);
 

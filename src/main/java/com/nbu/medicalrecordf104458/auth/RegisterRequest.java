@@ -1,4 +1,5 @@
 package com.nbu.medicalrecordf104458.auth;
+import com.nbu.medicalrecordf104458.model.user.Role;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,5 +21,7 @@ public class RegisterRequest {
     private String email;
 
     private String password;
+
+    private Role role;
 
 }
