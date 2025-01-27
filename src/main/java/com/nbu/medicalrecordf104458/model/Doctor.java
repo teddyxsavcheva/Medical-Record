@@ -1,5 +1,6 @@
 package com.nbu.medicalrecordf104458.model;
 
+import com.nbu.medicalrecordf104458.model.user.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.DiscriminatorType;
@@ -13,6 +14,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
@@ -48,5 +50,9 @@ public class Doctor {
 
     @OneToMany(mappedBy = "doctor")
     private Set<DoctorAppointment> appointments;
+
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 
 }

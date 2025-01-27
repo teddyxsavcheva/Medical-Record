@@ -1,5 +1,6 @@
 package com.nbu.medicalrecordf104458.model;
 
+import com.nbu.medicalrecordf104458.model.user.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -50,5 +52,9 @@ public class Patient {
     @OneToMany(mappedBy = "patient")
     @Column(name = "doctor_appointments_id")
     private Set<DoctorAppointment> appointments = new HashSet<>();
+
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 
 }
