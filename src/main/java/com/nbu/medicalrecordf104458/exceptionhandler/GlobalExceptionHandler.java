@@ -2,6 +2,7 @@ package com.nbu.medicalrecordf104458.exceptionhandler;
 
 import com.nbu.medicalrecordf104458.exceptionhandler.exceptions.InvalidDateException;
 import com.nbu.medicalrecordf104458.exceptionhandler.exceptions.SickLeaveAlreadyExistsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<Object> handleEntityNotFoundException(EntityNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<String> handleUsernameNotFoundException(UsernameNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Username not found: " + ex.getMessage());
     }
 
     @ExceptionHandler(SickLeaveAlreadyExistsException.class)
