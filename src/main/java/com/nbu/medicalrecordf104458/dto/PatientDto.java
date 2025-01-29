@@ -29,4 +29,6 @@ public class PatientDto {
     @NotNull(message = "Patient should have a family doctor")
     private Long familyDoctorId;
 
+    private Long userId;
+
 }

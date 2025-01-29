@@ -1,4 +1,5 @@
 package com.nbu.medicalrecordf104458.auth;
+import com.nbu.medicalrecordf104458.model.user.Role;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,10 +12,20 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationRequest {
+public class UserDto {
+
+    private String firstName;
+
+    private String lastName;
 
     private String email;
 
     private String password;
+
+    private Role role;
+
+    private Long doctorId;
+
+    private Long patientId;
 
 }
