@@ -12,6 +12,7 @@ import com.nbu.medicalrecordf104458.repository.PatientRepository;
 import com.nbu.medicalrecordf104458.service.PatientService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -38,6 +39,7 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
+    @PreAuthorize("@customSecurityChecker.isPatientAccessingOwnData(#id)")
     public PatientDto getPatientById(Long id) {
         Patient patient = patientRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No patient found with id: " + id));
@@ -115,6 +117,7 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
+    @PreAuthorize("@customSecurityChecker.isPatientAccessingOwnData(#patientId)")
     public Set<AppointmentDto> getVisitsByPatient(Long patientId) {
         if (!patientRepository.existsById(patientId)) {
             throw new EntityNotFoundException("No Patient found with id: " + patientId);
