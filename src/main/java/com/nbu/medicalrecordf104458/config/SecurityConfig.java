@@ -33,9 +33,12 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests
                         (auth -> auth
-                                //.requestMatchers("/api/v1/auth/**").permitAll()
-                                .requestMatchers("/api/v1/auth/register").hasAuthority("ADMIN")
-                                .requestMatchers("/api/v1/auth/authenticate").permitAll()
+                                .requestMatchers("/api/v1/auth/**").permitAll()
+                                //.requestMatchers("/api/v1/auth/register").hasAuthority("ADMIN")
+                                //.requestMatchers("/api/v1/auth/register-doctor").hasAuthority("ADMIN")
+                                //.requestMatchers("/api/v1/auth/register-gp").hasAuthority("ADMIN")
+                                //.requestMatchers("/api/v1/auth/register-patient").hasAuthority("ADMIN")
+                                //.requestMatchers("/api/v1/auth/authenticate").permitAll()
 
                                 // Admins can access everything
                                 // Doctors can view all sick leaves, patients, doctors, treatments, appointments and diagnoses
