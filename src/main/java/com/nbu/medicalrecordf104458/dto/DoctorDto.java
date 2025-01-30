@@ -22,6 +22,4 @@ public class DoctorDto {
     @NotEmpty(message = "Doctor should have at least one specialization")
     private Set<Long> specializationIds;
 
-    private Long userId;
-
 }

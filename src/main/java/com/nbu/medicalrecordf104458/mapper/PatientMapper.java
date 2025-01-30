@@ -4,7 +4,6 @@ import com.nbu.medicalrecordf104458.dto.PatientDto;
 import com.nbu.medicalrecordf104458.model.GeneralPractitioner;
 import com.nbu.medicalrecordf104458.model.Patient;
 import com.nbu.medicalrecordf104458.repository.GeneralPractitionerRepository;
-import com.nbu.medicalrecordf104458.repository.user.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Component;
 public class PatientMapper {
 
     private final GeneralPractitionerRepository gpRepository;
-    private final UserRepository userRepository;
 
     public PatientDto convertToDto(Patient patient) {
         PatientDto patientDto = new PatientDto();
@@ -24,10 +22,6 @@ public class PatientMapper {
         patientDto.setUnifiedCivilNumber(patient.getUnifiedCivilNumber());
         patientDto.setLastInsurancePayment(patient.getLastInsurancePayment());
         patientDto.setFamilyDoctorId(patient.getFamilyDoctor().getId());
-
-        if (patient.getUser() != null) {
-            patientDto.setUserId(patient.getUser().getId());
-        }
 
         return patientDto;
     }
@@ -43,11 +37,6 @@ public class PatientMapper {
                 .orElseThrow(() -> new EntityNotFoundException("No GP found with id: " + patientDto.getFamilyDoctorId()));
 
         patient.setFamilyDoctor(gp);
-
-        if (patientDto.getUserId() != null) {
-            patient.setUser(userRepository.findById(patientDto.getUserId())
-                    .orElseThrow(() -> new EntityNotFoundException("No user found with id: " + patientDto.getUserId())));
-        }
 
         return patient;
     }

@@ -1,4 +1,7 @@
 package com.nbu.medicalrecordf104458.auth;
+import com.nbu.medicalrecordf104458.dto.DoctorDto;
+import com.nbu.medicalrecordf104458.dto.GeneralPractitionerDto;
+import com.nbu.medicalrecordf104458.dto.PatientDto;
 import com.nbu.medicalrecordf104458.model.user.Role;
 
 import lombok.AllArgsConstructor;
@@ -24,8 +27,10 @@ public class UserDto {
 
     private Role role;
 
-    private Long doctorId;
+    private DoctorDto doctorDto;
 
-    private Long patientId;
+    private GeneralPractitionerDto gpDto;
+
+    private PatientDto patientDto;
 
 }

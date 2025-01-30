@@ -20,6 +20,4 @@ public class GeneralPractitionerDto {
 
     private Set<Long> patients = new HashSet<>();
 
-    private Long userId;
-
 }
