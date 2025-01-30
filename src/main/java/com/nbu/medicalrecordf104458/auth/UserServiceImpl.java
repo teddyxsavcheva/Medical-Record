@@ -35,7 +35,7 @@ public class UserServiceImpl {
 
     public AuthenticationResponseDto register(UserDto userDto) {
         if (!UserDtoValidator.isValidRole(userDto.getDoctorDto(), userDto.getGpDto(), userDto.getPatientDto())) {
-            throw new SecurityException("The User can't be associated with more than one entity!");
+            throw new SecurityException("The User must be associated with exactly one Doctor or Patient!");
         }
 
         User user = User.builder()
