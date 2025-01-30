@@ -36,8 +36,9 @@ public class UserServiceImpl {
     private final PatientMapper patientMapper;
 
     public AuthenticationResponseDto register(UserDto userDto) {
-        if (!UserDtoValidator.isValidRole(userDto.getDoctorDto(), userDto.getGpDto(), userDto.getPatientDto())) {
-            throw new SecurityException("The User must be associated with exactly one Doctor or Patient!");
+        if (!UserDtoValidator.isValidRole(userDto.getRole(), userDto.getDoctorDto(), userDto.getGpDto(), userDto.getPatientDto())) {
+            throw new SecurityException("For roles DOCTOR and PATIENT, the User must be associated with " +
+                    "exactly one corresponding entity (Doctor, GP, or Patient). ADMIN role should not be associated with any entity.");
         }
 
         User user = User.builder()
@@ -48,6 +49,7 @@ public class UserServiceImpl {
                 .role(userDto.getRole())
                 .build();
 
+        // TODO: Fix logic here
         if (userDto.getRole() == Role.DOCTOR) {
             if (userDto.getDoctorDto() != null) {
                 user.setDoctor(doctorMapper.convertToEntity(doctorService.createDoctor(userDto.getDoctorDto())));

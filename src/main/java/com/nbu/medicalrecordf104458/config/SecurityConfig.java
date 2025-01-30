@@ -29,12 +29,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .securityMatcher("/**") // Applies the configuration to all requests; adjust as needed
-                .csrf(AbstractHttpConfigurer::disable) // Explicitly disable CSRF
+                .securityMatcher("/**")
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests
                         (auth -> auth
+                                //.requestMatchers("/api/v1/auth/**").permitAll()
                                 .requestMatchers("/api/v1/auth/register").hasAuthority("ADMIN")
                                 .requestMatchers("/api/v1/auth/authenticate").permitAll()
+
                                 // Admins can access everything
                                 // Doctors can view all sick leaves, patients, doctors, treatments, appointments and diagnoses
                                 // Patients can only view their own info about appointments
