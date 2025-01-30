@@ -26,11 +26,13 @@ public class UserServiceImpl {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+
     private final DoctorService doctorService;
+    private final GeneralPractitionerService gpService;
     private final PatientService patientService;
+
     private final DoctorMapper doctorMapper;
     private final GeneralPractitionerMapper gpMapper;
-    private final GeneralPractitionerService gpService;
     private final PatientMapper patientMapper;
 
     public AuthenticationResponseDto register(UserDto userDto) {
