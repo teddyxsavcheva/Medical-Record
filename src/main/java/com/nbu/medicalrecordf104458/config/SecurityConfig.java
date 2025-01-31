@@ -85,7 +85,6 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.DELETE, "/doctor-appointments/{appointmentId}/diagnoses/{diagnoseId}/**").hasAnyAuthority("ADMIN")
 
                                 .requestMatchers(HttpMethod.GET, "/doctor-appointments/**").hasAnyAuthority("ADMIN", "DOCTOR")
-                                // Because the doctor won't be assigned to the appointment before it's created
                                 .requestMatchers(HttpMethod.POST, "/doctor-appointments/**").hasAnyAuthority("ADMIN", "DOCTOR")
                                 .requestMatchers(HttpMethod.PUT, "/doctor-appointments/**").hasAnyAuthority("ADMIN", "DOCTOR")
                                 .requestMatchers(HttpMethod.DELETE, "/doctor-appointments/**").hasAnyAuthority("ADMIN", "DOCTOR")
