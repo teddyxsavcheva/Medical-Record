@@ -1,4 +1,4 @@
-package com.nbu.medicalrecordf104458.auth;
+package com.nbu.medicalrecordf104458.dto.auth;
 import com.nbu.medicalrecordf104458.model.user.Role;
 
 import jakarta.validation.constraints.NotEmpty;

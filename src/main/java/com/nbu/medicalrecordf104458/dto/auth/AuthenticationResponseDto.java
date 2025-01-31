@@ -1,4 +1,4 @@
-package com.nbu.medicalrecordf104458.auth;
+package com.nbu.medicalrecordf104458.dto.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,10 +11,8 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationRequestDto {
+public class AuthenticationResponseDto {
 
-    private String email;
-
-    private String password;
+    private String token;
 
 }

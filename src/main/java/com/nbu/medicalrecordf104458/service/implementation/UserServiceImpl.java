@@ -1,5 +1,11 @@
-package com.nbu.medicalrecordf104458.auth;
+package com.nbu.medicalrecordf104458.service.implementation;
 
+import com.nbu.medicalrecordf104458.dto.auth.AuthenticationRequestDto;
+import com.nbu.medicalrecordf104458.dto.auth.AuthenticationResponseDto;
+import com.nbu.medicalrecordf104458.dto.auth.RegisterDoctorDto;
+import com.nbu.medicalrecordf104458.dto.auth.RegisterGpDto;
+import com.nbu.medicalrecordf104458.dto.auth.RegisterPatientDto;
+import com.nbu.medicalrecordf104458.dto.auth.RegisterUserDto;
 import com.nbu.medicalrecordf104458.config.JwtService;
 import com.nbu.medicalrecordf104458.dto.DoctorDto;
 import com.nbu.medicalrecordf104458.dto.GeneralPractitionerDto;
@@ -16,6 +22,7 @@ import com.nbu.medicalrecordf104458.repository.user.UserRepository;
 import com.nbu.medicalrecordf104458.service.DoctorService;
 import com.nbu.medicalrecordf104458.service.GeneralPractitionerService;
 import com.nbu.medicalrecordf104458.service.PatientService;
+import com.nbu.medicalrecordf104458.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,7 +33,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl {
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -41,8 +48,8 @@ public class UserServiceImpl {
     private final GeneralPractitionerRepository gPRepository;
     private final PatientRepository patientRepository;
 
+    @Override
     public AuthenticationResponseDto registerAdmin(RegisterUserDto userDto) {
-
         User user = User.builder()
                 .email(userDto.getEmail())
                 .password(passwordEncoder.encode(userDto.getPassword()))
@@ -58,8 +65,8 @@ public class UserServiceImpl {
                 .build();
     }
 
+    @Override
     public AuthenticationResponseDto registerDoctor(RegisterDoctorDto registerDoctorDto) {
-
         DoctorDto doctorToSave = new DoctorDto();
         doctorToSave.setName(registerDoctorDto.getName());
         doctorToSave.setSpecializationIds(registerDoctorDto.getSpecializationIds());
@@ -88,6 +95,7 @@ public class UserServiceImpl {
                 .build();
     }
 
+    @Override
     public AuthenticationResponseDto registerGp(RegisterGpDto registerGpDto) {
         GeneralPractitionerDto gpToSave = new GeneralPractitionerDto();
         gpToSave.setDoctor(registerGpDto.getDoctor());
@@ -117,7 +125,7 @@ public class UserServiceImpl {
                 .build();
     }
 
-
+    @Override
     public AuthenticationResponseDto registerPatient(RegisterPatientDto registerPatientDto) {
         PatientDto patientToSave = new PatientDto();
         patientToSave.setName(registerPatientDto.getName());
@@ -149,7 +157,7 @@ public class UserServiceImpl {
                 .build();
     }
 
-
+    @Override
     public AuthenticationResponseDto authenticate(AuthenticationRequestDto request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -166,6 +174,5 @@ public class UserServiceImpl {
                 .token(jwtToken)
                 .build();
     }
-
 
 }

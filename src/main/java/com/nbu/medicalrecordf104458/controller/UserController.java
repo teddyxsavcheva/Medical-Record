@@ -1,5 +1,12 @@
-package com.nbu.medicalrecordf104458.auth;
+package com.nbu.medicalrecordf104458.controller;
 
+import com.nbu.medicalrecordf104458.dto.auth.AuthenticationRequestDto;
+import com.nbu.medicalrecordf104458.dto.auth.AuthenticationResponseDto;
+import com.nbu.medicalrecordf104458.dto.auth.RegisterDoctorDto;
+import com.nbu.medicalrecordf104458.dto.auth.RegisterGpDto;
+import com.nbu.medicalrecordf104458.dto.auth.RegisterPatientDto;
+import com.nbu.medicalrecordf104458.dto.auth.RegisterUserDto;
+import com.nbu.medicalrecordf104458.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,31 +20,31 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserServiceImpl service;
+    private final UserService userService;
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponseDto> register(@Valid @RequestBody RegisterUserDto request) {
-        return ResponseEntity.ok(service.registerAdmin(request));
+        return ResponseEntity.ok(userService.registerAdmin(request));
     }
 
     @PostMapping("/register-doctor")
     public ResponseEntity<AuthenticationResponseDto> registerDoctor(@Valid @RequestBody RegisterDoctorDto request) {
-        return ResponseEntity.ok(service.registerDoctor(request));
+        return ResponseEntity.ok(userService.registerDoctor(request));
     }
 
     @PostMapping("/register-gp")
     public ResponseEntity<AuthenticationResponseDto> registerGp(@Valid @RequestBody RegisterGpDto request) {
-        return ResponseEntity.ok(service.registerGp(request));
+        return ResponseEntity.ok(userService.registerGp(request));
     }
 
     @PostMapping("/register-patient")
     public ResponseEntity<AuthenticationResponseDto> registerPatient(@Valid @RequestBody RegisterPatientDto request) {
-        return ResponseEntity.ok(service.registerPatient(request));
+        return ResponseEntity.ok(userService.registerPatient(request));
     }
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponseDto> authenticate(@RequestBody AuthenticationRequestDto request) {
-        return ResponseEntity.ok(service.authenticate(request));
+        return ResponseEntity.ok(userService.authenticate(request));
     }
 
 }
