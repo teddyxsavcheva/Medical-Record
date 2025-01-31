@@ -34,11 +34,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests
                         (auth -> auth
                                 //.requestMatchers("/api/v1/auth/**").permitAll()
-                                .requestMatchers("/api/v1/auth/register").hasAuthority("ADMIN")
-                                .requestMatchers("/api/v1/auth/register-doctor").hasAuthority("ADMIN")
-                                .requestMatchers("/api/v1/auth/register-gp").hasAuthority("ADMIN")
-                                .requestMatchers("/api/v1/auth/register-patient").hasAuthority("ADMIN")
-                                .requestMatchers("/api/v1/auth/authenticate").permitAll()
+                                .requestMatchers("/api/v1/auth/register/**").hasAuthority("ADMIN")
+                                .requestMatchers("/api/v1/auth/register-doctor/**").hasAuthority("ADMIN")
+                                .requestMatchers("/api/v1/auth/register-gp/**").hasAuthority("ADMIN")
+                                .requestMatchers("/api/v1/auth/register-patient/**").hasAuthority("ADMIN")
+                                .requestMatchers("/api/v1/auth/authenticate/**").permitAll()
 
                                 // Admins can do everything
                                 // Doctors can view all sick leaves, patients, doctors, treatments, appointments and diagnoses
@@ -49,20 +49,20 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.PUT, "/specializations/**").hasAuthority("ADMIN")
                                 .requestMatchers(HttpMethod.DELETE, "/specializations/**").hasAuthority("ADMIN")
 
-                                .requestMatchers(HttpMethod.GET, "/patients/**").hasAnyAuthority("ADMIN", "DOCTOR", "PATIENT") // Doctors can see only getAll()
+                                .requestMatchers(HttpMethod.GET, "/patients/**").hasAnyAuthority("ADMIN", "DOCTOR", "PATIENT")
                                 .requestMatchers(HttpMethod.POST, "/patients/**").hasAuthority("ADMIN")
                                 .requestMatchers(HttpMethod.PUT, "/patients/**").hasAuthority("ADMIN")
                                 .requestMatchers(HttpMethod.DELETE, "/patients/**").hasAuthority("ADMIN")
 
-                                .requestMatchers(HttpMethod.GET, "/doctors/**").hasAnyAuthority("ADMIN", "DOCTOR") // Doctors can see only getAll()
+                                .requestMatchers(HttpMethod.GET, "/doctors/**").hasAnyAuthority("ADMIN", "DOCTOR")
                                 .requestMatchers(HttpMethod.POST, "/doctors/**").hasAuthority("ADMIN")
                                 .requestMatchers(HttpMethod.PUT, "/doctors/**").hasAuthority("ADMIN")
                                 .requestMatchers(HttpMethod.DELETE, "/doctors/**").hasAuthority("ADMIN")
 
-                                .requestMatchers(HttpMethod.GET, "/general-practitioners**").hasAnyAuthority("ADMIN", "DOCTOR") // Doctors can see only getAll()
-                                .requestMatchers(HttpMethod.POST, "/general-practitioners**").hasAuthority("ADMIN")
-                                .requestMatchers(HttpMethod.PUT, "/general-practitioners**").hasAuthority("ADMIN")
-                                .requestMatchers(HttpMethod.DELETE, "/general-practitioners**").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/general-practitioners/**").hasAnyAuthority("ADMIN", "DOCTOR")
+                                .requestMatchers(HttpMethod.POST, "/general-practitioners/**").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/general-practitioners/**").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "/general-practitioners/**").hasAuthority("ADMIN")
 
                                 .requestMatchers(HttpMethod.GET, "/diagnoses/**").hasAnyAuthority("ADMIN", "DOCTOR")
                                 .requestMatchers(HttpMethod.POST, "/diagnoses/**").hasAuthority("ADMIN")
@@ -75,14 +75,14 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.DELETE, "/treatments/**").hasAuthority("ADMIN")
 
                                 // Doctors can edit only the appointments they have been assigned to
-                                .requestMatchers(HttpMethod.POST, "/treatments/**/appointments/**").hasAnyAuthority("ADMIN", "DOCTOR")
-                                .requestMatchers(HttpMethod.DELETE, "/treatments/**/appointments/**").hasAnyAuthority("ADMIN", "DOCTOR")
+                                .requestMatchers(HttpMethod.POST, "/treatments/{treatmentId}/appointments/{appointmentId}/**").hasAnyAuthority("ADMIN", "DOCTOR")
+                                .requestMatchers(HttpMethod.DELETE, "/treatments/{treatmentId}/appointments/{appointmentId}/**").hasAnyAuthority("ADMIN", "DOCTOR")
 
-                                .requestMatchers(HttpMethod.POST, "/doctor-appointments/**/treatments/**").hasAnyAuthority("ADMIN", "DOCTOR")
-                                .requestMatchers(HttpMethod.DELETE, "/doctor-appointments/**/treatments/**").hasAnyAuthority("ADMIN", "DOCTOR")
+                                .requestMatchers(HttpMethod.POST, "/doctor-appointments/{appointmentId}/treatments/{treatmentId}/**").hasAnyAuthority("ADMIN", "DOCTOR")
+                                .requestMatchers(HttpMethod.DELETE, "/doctor-appointments/{appointmentId}/treatments/{treatmentId}/**").hasAnyAuthority("ADMIN", "DOCTOR")
 
-                                .requestMatchers(HttpMethod.POST, "/doctor-appointments/**/diagnoses/**").hasAnyAuthority("ADMIN", "DOCTOR")
-                                .requestMatchers(HttpMethod.DELETE, "/doctor-appointments/**/diagnoses/**").hasAnyAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.POST, "/doctor-appointments/{appointmentId}/diagnoses/{diagnoseId}/**").hasAnyAuthority("ADMIN", "DOCTOR")
+                                .requestMatchers(HttpMethod.DELETE, "/doctor-appointments/{appointmentId}/diagnoses/{diagnoseId}/**").hasAnyAuthority("ADMIN")
 
                                 .requestMatchers(HttpMethod.GET, "/doctor-appointments/**").hasAnyAuthority("ADMIN", "DOCTOR")
                                 // Because the doctor won't be assigned to the appointment before it's created

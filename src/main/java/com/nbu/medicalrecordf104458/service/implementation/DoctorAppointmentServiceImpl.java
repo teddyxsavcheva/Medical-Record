@@ -51,7 +51,7 @@ public class DoctorAppointmentServiceImpl implements DoctorAppointmentService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ROLE_ADMIN') or @customSecurityChecker.checkDoctorAccessForAppointmentCreation(#appointmentDto.getDoctorId())")
+    @PreAuthorize("hasRole('ADMIN') or @customSecurityChecker.checkDoctorAccessForAppointmentCreation(#appointmentDto.getDoctorId())")
     public AppointmentDto createAppointment(AppointmentDto appointmentDto) {
         DoctorAppointment appointment = mapper.convertToEntity(appointmentDto);
 
@@ -59,7 +59,7 @@ public class DoctorAppointmentServiceImpl implements DoctorAppointmentService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ROLE_ADMIN') or @customSecurityChecker.isDoctorAssociatedWithAppointment(#id)")
+    @PreAuthorize("hasRole('ADMIN') or @customSecurityChecker.isDoctorAssociatedWithAppointment(#id)")
     public AppointmentDto updateAppointment(Long id, AppointmentDto appointmentDto) {
         DoctorAppointment appointment = appointmentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No Appointment found with id: " + id));
@@ -93,7 +93,7 @@ public class DoctorAppointmentServiceImpl implements DoctorAppointmentService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ROLE_ADMIN') or @customSecurityChecker.isDoctorAssociatedWithAppointment(#id)")
+    @PreAuthorize("hasRole('ADMIN') or @customSecurityChecker.isDoctorAssociatedWithAppointment(#id)")
     public void deleteAppointment(Long id) {
         DoctorAppointment appointment = appointmentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No Appointment found with id: " + id));
@@ -104,7 +104,7 @@ public class DoctorAppointmentServiceImpl implements DoctorAppointmentService {
     // Add/Remove methods for Treatment and Diagnose  many-to-many table
 
     @Override
-    @PreAuthorize("hasRole('ROLE_ADMIN') or @customSecurityChecker.isDoctorAssociatedWithAppointment(#appointmentId)")
+    @PreAuthorize("hasRole('ADMIN') or @customSecurityChecker.isDoctorAssociatedWithAppointment(#appointmentId)")
     public AppointmentDto addDiagnose(Long appointmentId, Long diagnoseId) {
         DoctorAppointment appointment = appointmentRepository.findById(appointmentId)
                 .orElseThrow(() -> new EntityNotFoundException("No Appointment found with id: " + appointmentId));
@@ -118,7 +118,7 @@ public class DoctorAppointmentServiceImpl implements DoctorAppointmentService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ROLE_ADMIN') or @customSecurityChecker.isDoctorAssociatedWithAppointment(#appointmentId)")
+    @PreAuthorize("hasRole('ADMIN') or @customSecurityChecker.isDoctorAssociatedWithAppointment(#appointmentId)")
     public AppointmentDto removeDiagnose(Long appointmentId, Long diagnoseId) {
         DoctorAppointment appointment = appointmentRepository.findById(appointmentId)
                 .orElseThrow(() -> new EntityNotFoundException("No Appointment found with id: " + appointmentId));
@@ -132,7 +132,7 @@ public class DoctorAppointmentServiceImpl implements DoctorAppointmentService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ROLE_ADMIN') or @customSecurityChecker.isDoctorAssociatedWithAppointment(#appointmentId)")
+    @PreAuthorize("hasRole('ADMIN') or @customSecurityChecker.isDoctorAssociatedWithAppointment(#appointmentId)")
     public AppointmentDto addTreatment(Long appointmentId, Long treatmentId) {
         DoctorAppointment appointment = appointmentRepository.findById(appointmentId)
                 .orElseThrow(() -> new EntityNotFoundException("No Appointment found with id: " + appointmentId));
@@ -147,7 +147,7 @@ public class DoctorAppointmentServiceImpl implements DoctorAppointmentService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ROLE_ADMIN') or @customSecurityChecker.isDoctorAssociatedWithAppointment(#appointmentId)")
+    @PreAuthorize("hasRole('ADMIN') or @customSecurityChecker.isDoctorAssociatedWithAppointment(#appointmentId)")
     public AppointmentDto removeTreatment(Long appointmentId, Long treatmentId) {
         DoctorAppointment appointment = appointmentRepository.findById(appointmentId)
                 .orElseThrow(() -> new EntityNotFoundException("No Appointment found with id: " + appointmentId));

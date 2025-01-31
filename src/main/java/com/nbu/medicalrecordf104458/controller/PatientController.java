@@ -63,7 +63,7 @@ public class PatientController {
         if (hasPaid) {
             return ResponseEntity.ok("The patient has paid their insurance in the last 6 months.");
         } else {
-            return ResponseEntity.status(400).body("The patient has not paid their insurance in the last 6 months.");
+            return ResponseEntity.ok("The patient has not paid their insurance in the last 6 months.");
         }
     }
 

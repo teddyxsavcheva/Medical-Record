@@ -109,7 +109,7 @@ public class DiagnoseServiceImpl implements DiagnoseService {
 
     // Queries
     @Override
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     public Set<DiagnoseDto> findMostCommonDiagnoses() {
         Set<Diagnose> diagnoses = new HashSet<>(diagnoseRepository.findAll());
 
