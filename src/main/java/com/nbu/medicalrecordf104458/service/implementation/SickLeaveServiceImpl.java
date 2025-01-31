@@ -11,6 +11,7 @@ import com.nbu.medicalrecordf104458.service.SickLeaveService;
 import com.nbu.medicalrecordf104458.utility.DateValidator;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.time.YearMonth;
@@ -30,6 +31,7 @@ public class SickLeaveServiceImpl implements SickLeaveService {
     private final SickLeaveRepository repository;
 
     @Override
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     public Set<SickLeaveDto> getAllSickLeaves() {
         return repository.findAll().stream()
                 .map(mapper::convertToDto)
@@ -37,6 +39,7 @@ public class SickLeaveServiceImpl implements SickLeaveService {
     }
 
     @Override
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     public SickLeaveDto getSickLeaveById(Long id) {
         SickLeave sickLeave = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No sick leave found with id: " + id));
@@ -45,6 +48,7 @@ public class SickLeaveServiceImpl implements SickLeaveService {
     }
 
     @Override
+    @PreAuthorize("hasAnyAuthority('ADMIN') or @customSecurityChecker.isDoctorAssociatedWithAppointment(#sickLeaveDto.doctorAppointmentId)")
     public SickLeaveDto createSickLeave(SickLeaveDto sickLeaveDto) {
         DateValidator.validateDateRange(sickLeaveDto.getStartDate(), sickLeaveDto.getEndDate());
 
@@ -60,6 +64,7 @@ public class SickLeaveServiceImpl implements SickLeaveService {
     }
 
     @Override
+    @PreAuthorize("hasAnyAuthority('ADMIN') or @customSecurityChecker.isDoctorAssociatedWithSickLeave(#id)")
     public SickLeaveDto updateSickLeave(Long id, SickLeaveDto sickLeaveDto) {
         DateValidator.validateDateRange(sickLeaveDto.getStartDate(), sickLeaveDto.getEndDate());
 
@@ -82,6 +87,7 @@ public class SickLeaveServiceImpl implements SickLeaveService {
     }
 
     @Override
+    @PreAuthorize("hasAnyAuthority('ADMIN') or @customSecurityChecker.isDoctorAssociatedWithSickLeave(#id)")
     public void deleteSickLeave(Long id) {
         SickLeave sickLeave = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No sick leave found with id: " + id));
@@ -93,6 +99,7 @@ public class SickLeaveServiceImpl implements SickLeaveService {
 
     // Queries
     @Override
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     public String getMonthWithMostSickLeaves() {
         // Извличане на всички болнични
         Set<SickLeave> sickLeaves = new HashSet<>(repository.findAll());

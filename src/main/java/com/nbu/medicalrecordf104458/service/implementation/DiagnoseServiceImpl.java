@@ -9,6 +9,7 @@ import com.nbu.medicalrecordf104458.repository.DoctorAppointmentRepository;
 import com.nbu.medicalrecordf104458.service.DiagnoseService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -26,6 +27,7 @@ public class DiagnoseServiceImpl implements DiagnoseService {
     private final DiagnoseMapper mapper;
 
     @Override
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     public Set<DiagnoseDto> getAllDiagnoses() {
         return diagnoseRepository.findAll().stream()
                 .map(mapper::convertToDto)
@@ -33,6 +35,7 @@ public class DiagnoseServiceImpl implements DiagnoseService {
     }
 
     @Override
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     public DiagnoseDto getDiagnoseById(Long id) {
         Diagnose diagnose = diagnoseRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No diagnose found with id: " + id));
@@ -41,6 +44,7 @@ public class DiagnoseServiceImpl implements DiagnoseService {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
     public DiagnoseDto createDiagnose(DiagnoseDto diagnoseDto) {
         Diagnose diagnose = mapper.convertToEntity(diagnoseDto);
 
@@ -48,6 +52,7 @@ public class DiagnoseServiceImpl implements DiagnoseService {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
     public DiagnoseDto updateDiagnose(Long id, DiagnoseDto diagnoseDto) {
         Diagnose diagnose = diagnoseRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No diagnose found with id: " + id));
@@ -66,6 +71,7 @@ public class DiagnoseServiceImpl implements DiagnoseService {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteDiagnose(Long id) {
         Diagnose diagnose = diagnoseRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No diagnose found with id: " + id));
@@ -74,6 +80,7 @@ public class DiagnoseServiceImpl implements DiagnoseService {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
     public DiagnoseDto addAppointment(Long diagnoseId, Long appointmentId) {
         Diagnose diagnose = diagnoseRepository.findById(diagnoseId)
                 .orElseThrow(() -> new EntityNotFoundException("No diagnose found with id: " + diagnoseId));
@@ -87,6 +94,7 @@ public class DiagnoseServiceImpl implements DiagnoseService {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
     public DiagnoseDto removeAppointment(Long diagnoseId, Long appointmentId) {
         Diagnose diagnose = diagnoseRepository.findById(diagnoseId)
                 .orElseThrow(() -> new EntityNotFoundException("No diagnose found with id: " + diagnoseId));
@@ -101,6 +109,7 @@ public class DiagnoseServiceImpl implements DiagnoseService {
 
     // Queries
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
     public Set<DiagnoseDto> findMostCommonDiagnoses() {
         Set<Diagnose> diagnoses = new HashSet<>(diagnoseRepository.findAll());
 

@@ -25,6 +25,7 @@ import com.nbu.medicalrecordf104458.service.PatientService;
 import com.nbu.medicalrecordf104458.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -49,6 +50,7 @@ public class UserServiceImpl implements UserService {
     private final PatientRepository patientRepository;
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
     public AuthenticationResponseDto registerAdmin(RegisterUserDto userDto) {
         User user = User.builder()
                 .email(userDto.getEmail())
@@ -66,6 +68,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
     public AuthenticationResponseDto registerDoctor(RegisterDoctorDto registerDoctorDto) {
         DoctorDto doctorToSave = new DoctorDto();
         doctorToSave.setName(registerDoctorDto.getName());
@@ -96,6 +99,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
     public AuthenticationResponseDto registerGp(RegisterGpDto registerGpDto) {
         GeneralPractitionerDto gpToSave = new GeneralPractitionerDto();
         gpToSave.setDoctor(registerGpDto.getDoctor());
@@ -126,6 +130,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
     public AuthenticationResponseDto registerPatient(RegisterPatientDto registerPatientDto) {
         PatientDto patientToSave = new PatientDto();
         patientToSave.setName(registerPatientDto.getName());
@@ -158,6 +163,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR', 'PATIENT')")
     public AuthenticationResponseDto authenticate(AuthenticationRequestDto request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(

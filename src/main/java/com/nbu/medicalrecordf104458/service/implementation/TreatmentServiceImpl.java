@@ -9,6 +9,7 @@ import com.nbu.medicalrecordf104458.repository.TreatmentRepository;
 import com.nbu.medicalrecordf104458.service.TreatmentService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -23,6 +24,7 @@ public class TreatmentServiceImpl implements TreatmentService {
     private final DoctorAppointmentRepository appointmentRepository;
 
     @Override
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     public Set<TreatmentDto> getAllTreatments() {
         return treatmentRepository.findAll().stream()
                 .map(mapper::convertToDto)
@@ -30,6 +32,7 @@ public class TreatmentServiceImpl implements TreatmentService {
     }
 
     @Override
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     public TreatmentDto getTreatmentById(Long id) {
         Treatment treatment = treatmentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No Treatment found with id: " + id));
@@ -38,6 +41,7 @@ public class TreatmentServiceImpl implements TreatmentService {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
     public TreatmentDto createTreatment(TreatmentDto treatmentDto) {
         Treatment treatment = mapper.convertToEntity(treatmentDto);
 
@@ -45,6 +49,7 @@ public class TreatmentServiceImpl implements TreatmentService {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
     public TreatmentDto updateTreatment(Long id, TreatmentDto treatmentDto) {
         Treatment treatment = treatmentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No Treatment found with id: " + id));
@@ -64,6 +69,7 @@ public class TreatmentServiceImpl implements TreatmentService {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteTreatment(Long id) {
         Treatment treatment = treatmentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No Treatment found with id: " + id));
@@ -72,6 +78,7 @@ public class TreatmentServiceImpl implements TreatmentService {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
     public TreatmentDto addAppointment(Long treatmentId, Long appointmentId) {
         Treatment treatment = treatmentRepository.findById(treatmentId)
                 .orElseThrow(() -> new EntityNotFoundException("No Treatment found with id: " + treatmentId));
@@ -85,6 +92,7 @@ public class TreatmentServiceImpl implements TreatmentService {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
     public TreatmentDto removeAppointment(Long treatmentId, Long appointmentId) {
         Treatment treatment = treatmentRepository.findById(treatmentId)
                 .orElseThrow(() -> new EntityNotFoundException("No Treatment found with id: " + treatmentId));

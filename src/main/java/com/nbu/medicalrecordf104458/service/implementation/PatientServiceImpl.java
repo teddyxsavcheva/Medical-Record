@@ -31,6 +31,7 @@ public class PatientServiceImpl implements PatientService {
     private final DiagnoseRepository diagnoseRepository;
 
     @Override
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     public Set<PatientDto> getAllPatients() {
 
         return patientRepository.findAll().stream()
@@ -39,7 +40,7 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    @PreAuthorize("@customSecurityChecker.isPatientAccessingOwnData(#id)")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR') or @customSecurityChecker.isPatientAccessingOwnData(#id)")
     public PatientDto getPatientById(Long id) {
         Patient patient = patientRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No patient found with id: " + id));
@@ -48,6 +49,7 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
     public PatientDto createPatient(PatientDto patientDto) {
         Patient patient = mapper.convertToEntity(patientDto);
 
@@ -55,6 +57,7 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
     public PatientDto updatePatient(Long id, PatientDto patientDto) {
         Patient patient = patientRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No patient found with id: " + id));
@@ -72,6 +75,7 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void deletePatient(Long id) {
         Patient patient = patientRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No patient found with id: " + id));
@@ -80,6 +84,7 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     public boolean isInsurancePaidLast6Months(Long patientId) {
         Patient patient = patientRepository.findById(patientId)
                 .orElseThrow(() -> new EntityNotFoundException("No patient found with id: " + patientId));
@@ -95,6 +100,7 @@ public class PatientServiceImpl implements PatientService {
     // Queries
 
     @Override
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     public Set<PatientDto> getPatientsByDiagnoseId(Long diagnoseId) {
         if (!diagnoseRepository.existsById(diagnoseId)) {
             throw new EntityNotFoundException("No Diagnose with id: " + diagnoseId);
@@ -106,6 +112,7 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     public Set<PatientDto> getPatientsByGeneralPractitioner(Long gpId) {
         if (!gpRepository.existsById(gpId)) {
             throw new EntityNotFoundException("No GP with id: " + gpId);
@@ -117,7 +124,7 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    @PreAuthorize("@customSecurityChecker.isPatientAccessingOwnData(#patientId)")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR') or @customSecurityChecker.isPatientAccessingOwnData(#patientId)")
     public Set<AppointmentDto> getVisitsByPatient(Long patientId) {
         if (!patientRepository.existsById(patientId)) {
             throw new EntityNotFoundException("No Patient found with id: " + patientId);

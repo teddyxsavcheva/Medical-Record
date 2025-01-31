@@ -9,6 +9,7 @@ import com.nbu.medicalrecordf104458.repository.SpecializationRepository;
 import com.nbu.medicalrecordf104458.service.SpecializationService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -23,14 +24,15 @@ public class SpecializationServiceImpl implements SpecializationService {
     private final SpecializationMapper mapper;
 
     @Override
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     public Set<SpecializationDto> getAllSpecializations() {
-
         return specializationRepository.findAll().stream()
                 .map(mapper::convertToDto)
                 .collect(Collectors.toSet());
     }
 
     @Override
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     public SpecializationDto getSpecializationById(Long id) {
         Specialization specialization = specializationRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No Specialization found with id: " + id));
@@ -39,6 +41,7 @@ public class SpecializationServiceImpl implements SpecializationService {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
     public SpecializationDto createSpecialization(SpecializationDto specializationDto) {
        Specialization specialization = mapper.convertToEntity(specializationDto);
 
@@ -46,6 +49,7 @@ public class SpecializationServiceImpl implements SpecializationService {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
     public SpecializationDto updateSpecialization(Long id, SpecializationDto specializationDto) {
         Specialization specialization = specializationRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No Specialization found with id: " + id));
@@ -63,6 +67,7 @@ public class SpecializationServiceImpl implements SpecializationService {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteSpecialization(Long id) {
         Specialization specialization = specializationRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No specialization found with id: " + id));
@@ -71,6 +76,7 @@ public class SpecializationServiceImpl implements SpecializationService {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
     public SpecializationDto addDoctor(Long specializationId, Long doctorId) {
         Specialization specialization = specializationRepository.findById(specializationId)
                 .orElseThrow(() -> new EntityNotFoundException("No specialization found with id: " + specializationId));
@@ -84,6 +90,7 @@ public class SpecializationServiceImpl implements SpecializationService {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
     public SpecializationDto removeDoctor(Long specializationId, Long doctorId) {
         Specialization specialization = specializationRepository.findById(specializationId)
                 .orElseThrow(() -> new EntityNotFoundException("No specialization found with id: " + specializationId));

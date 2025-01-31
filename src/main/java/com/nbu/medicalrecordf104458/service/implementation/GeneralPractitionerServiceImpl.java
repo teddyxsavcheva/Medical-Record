@@ -12,6 +12,7 @@ import com.nbu.medicalrecordf104458.repository.SpecializationRepository;
 import com.nbu.medicalrecordf104458.service.GeneralPractitionerService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -27,6 +28,7 @@ public class GeneralPractitionerServiceImpl implements GeneralPractitionerServic
     private final GeneralPractitionerMapper gpMapper;
 
     @Override
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     public Set<GeneralPractitionerDto> getAllDoctors() {
         return gpRepository.findAll().stream()
                 .map(gpMapper::convertToDto)
@@ -34,6 +36,7 @@ public class GeneralPractitionerServiceImpl implements GeneralPractitionerServic
     }
 
     @Override
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     public GeneralPractitionerDto getDoctorById(Long id) {
         GeneralPractitioner gp = gpRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No GP found with id: " + id));
@@ -42,6 +45,7 @@ public class GeneralPractitionerServiceImpl implements GeneralPractitionerServic
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
     public GeneralPractitionerDto createDoctor(GeneralPractitionerDto gpDto) {
         GeneralPractitioner gp = gpMapper.convertToEntity(gpDto);
 
@@ -49,6 +53,7 @@ public class GeneralPractitionerServiceImpl implements GeneralPractitionerServic
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
     public GeneralPractitionerDto updateDoctor(Long id, GeneralPractitionerDto gpDto) {
         GeneralPractitioner gp = gpRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No GP found with id: " + id));
@@ -73,6 +78,7 @@ public class GeneralPractitionerServiceImpl implements GeneralPractitionerServic
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteDoctor(Long id) {
         GeneralPractitioner gp = gpRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No GP found with id: " + id));
@@ -81,6 +87,7 @@ public class GeneralPractitionerServiceImpl implements GeneralPractitionerServic
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
     public GeneralPractitionerDto addSpecialization(Long gpId, Long specializationId) {
         GeneralPractitioner gp = gpRepository.findById(gpId)
                 .orElseThrow(() -> new EntityNotFoundException("No GP found with id: " + gpId));
@@ -107,6 +114,7 @@ public class GeneralPractitionerServiceImpl implements GeneralPractitionerServic
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
     public GeneralPractitionerDto addPatient(Long gpId, Long patientId) {
         GeneralPractitioner gp = gpRepository.findById(gpId)
                 .orElseThrow(() -> new EntityNotFoundException("No GP found with id: " + gpId));
@@ -120,6 +128,7 @@ public class GeneralPractitionerServiceImpl implements GeneralPractitionerServic
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
     public GeneralPractitionerDto removePatient(Long gpId, Long patientId) {
         GeneralPractitioner gp = gpRepository.findById(gpId)
                 .orElseThrow(() -> new EntityNotFoundException("No GP found with id: " + gpId));
@@ -133,11 +142,13 @@ public class GeneralPractitionerServiceImpl implements GeneralPractitionerServic
     }
 
     @Override
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     public Set<GpPatientsCountDto> getAllGeneralPractitionersWithPatientCount() {
         return gpRepository.findAllDoctorsWithPatientCount();
     }
 
     @Override
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     public GpPatientsCountDto getGeneralPractitionerWithPatientCount(Long gpId) {
         if (!gpRepository.existsById(gpId)) {
             throw new EntityNotFoundException("No GP with id: " + gpId);

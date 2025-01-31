@@ -10,6 +10,7 @@ import com.nbu.medicalrecordf104458.repository.SpecializationRepository;
 import com.nbu.medicalrecordf104458.service.DoctorService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -27,6 +28,7 @@ public class DoctorServiceImpl implements DoctorService {
     private final SpecializationRepository specializationRepository;
 
     @Override
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     public Set<DoctorDto> getAllDoctors() {
         return doctorRepository.findAll().stream()
                 .map(mapper::convertToDto)
@@ -34,6 +36,7 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     public DoctorDto getDoctorById(Long id) {
         Doctor doctor = doctorRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No doctor found with id: " + id));
@@ -42,6 +45,7 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
     public DoctorDto createDoctor(DoctorDto doctorDto) {
         Doctor doctor = mapper.convertToEntity(doctorDto);
 
@@ -49,6 +53,7 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
     public DoctorDto updateDoctor(Long id, DoctorDto doctorDto) {
         Doctor doctor = doctorRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No doctor found with id: " + id));
@@ -66,6 +71,7 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteDoctor(Long id) {
         Doctor doctor = doctorRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No doctor found with id: " + id));
@@ -74,6 +80,7 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
     public DoctorDto addSpecialization(Long doctorId, Long specializationId) {
         Doctor doctor = doctorRepository.findById(doctorId)
                 .orElseThrow(() -> new EntityNotFoundException("No doctor found with id: " + doctorId));
@@ -87,6 +94,7 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
     public DoctorDto removeSpecialization(Long doctorId, Long specializationId) {
         Doctor doctor = doctorRepository.findById(doctorId)
                 .orElseThrow(() -> new EntityNotFoundException("No doctor found with id: " + doctorId));
@@ -101,11 +109,13 @@ public class DoctorServiceImpl implements DoctorService {
 
     // Queries
     @Override
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     public Set<DoctorAppointmentsCountDto> getAllDoctorsWithAppointmentCount() {
         return doctorRepository.findAllDoctorsWithAppointmentCount();
     }
 
     @Override
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     public DoctorAppointmentsCountDto getDoctorWithAppointmentCount(Long doctorId) {
         if (!doctorRepository.existsById(doctorId)) {
             throw new EntityNotFoundException("No Doctor with id: " + doctorId);
@@ -115,6 +125,7 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     public Set<DoctorDto> findDoctorsWithMostSickLeaves() {
         Set<Doctor> doctors = new HashSet<>(doctorRepository.findAll());
 
