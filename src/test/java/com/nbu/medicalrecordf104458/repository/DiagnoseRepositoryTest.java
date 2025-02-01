@@ -33,15 +33,18 @@ public class DiagnoseRepositoryTest {
     public void setUp() {
         fluDiagnose = new Diagnose();
         fluDiagnose.setName("Flu");
-        fluDiagnose.setDescription("Influenza virus infection");
+        fluDiagnose.setDescription("A contagious respiratory illness caused by influenza viruses, " +
+                "leading to fever, cough, sore throat, body aches, and fatigue.");
 
         covidDiagnose = new Diagnose();
         covidDiagnose.setName("COVID-19");
-        covidDiagnose.setDescription("Coronavirus disease 2019");
+        covidDiagnose.setDescription("A respiratory illness caused by the SARS-CoV-2 virus, " +
+                "characterized by symptoms such as fever, dry cough, difficulty breathing, fatigue, and loss of taste or smell.");
 
         allergyDiagnose = new Diagnose();
         allergyDiagnose.setName("Allergy");
-        allergyDiagnose.setDescription("Allergic reaction");
+        allergyDiagnose.setDescription("An immune system reaction to substances (allergens) like pollen, dust, " +
+                "or certain foods, which can cause symptoms ranging from sneezing and itching to more severe reactions such as anaphylaxis.");
 
         diagnoseRepository.save(fluDiagnose);
         diagnoseRepository.save(covidDiagnose);
