@@ -12,16 +12,19 @@ import java.util.Set;
 @Repository
 public interface DoctorRepository extends JpaRepository<Doctor, Long> {
 
-    // e. - for certain doctor
+    Set<Doctor> findAllByDeletedFalse();
+
+    // e. - for certain doctor (excluding deleted ones)
     @Query("SELECT new com.nbu.medicalrecordf104458.dto.queries.DoctorAppointmentsCountDto(d.id, d.name, COUNT(a)) " +
             "FROM Doctor d LEFT JOIN d.appointments a " +
-            "WHERE d.id = :doctorId " +
+            "WHERE d.id = :doctorId AND d.deleted = false " +
             "GROUP BY d.id, d.name")
     DoctorAppointmentsCountDto findDoctorWithAppointmentCount(@Param("doctorId") Long doctorId);
 
-    // e. - for all doctors
+    // e. - for all doctors (excluding deleted ones)
     @Query("SELECT new com.nbu.medicalrecordf104458.dto.queries.DoctorAppointmentsCountDto(d.id, d.name, COUNT(a)) " +
             "FROM Doctor d LEFT JOIN d.appointments a " +
+            "WHERE d.deleted = false " +
             "GROUP BY d.id, d.name")
     Set<DoctorAppointmentsCountDto> findAllDoctorsWithAppointmentCount();
 

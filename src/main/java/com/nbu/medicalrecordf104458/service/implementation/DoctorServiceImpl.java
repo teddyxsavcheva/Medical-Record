@@ -30,7 +30,7 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     public Set<DoctorDto> getAllDoctors() {
-        return doctorRepository.findAll().stream()
+        return doctorRepository.findAllByDeletedFalse().stream()
                 .map(mapper::convertToDto)
                 .collect(Collectors.toSet());
     }
@@ -76,7 +76,9 @@ public class DoctorServiceImpl implements DoctorService {
         Doctor doctor = doctorRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No doctor found with id: " + id));
 
-        doctorRepository.delete(doctor);
+        doctor.setDeleted(true);
+
+        doctorRepository.save(doctor);
     }
 
     @Override
@@ -127,7 +129,7 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     public Set<DoctorDto> findDoctorsWithMostSickLeaves() {
-        Set<Doctor> doctors = new HashSet<>(doctorRepository.findAll());
+        Set<Doctor> doctors = new HashSet<>(doctorRepository.findAllByDeletedFalse());
 
         Map<Long, Integer> doctorSickLeaveCountMap = new HashMap<>();
         int maxSickLeaveCount = 0;

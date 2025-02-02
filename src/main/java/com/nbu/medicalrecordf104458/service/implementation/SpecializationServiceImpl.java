@@ -26,7 +26,7 @@ public class SpecializationServiceImpl implements SpecializationService {
     @Override
     @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     public Set<SpecializationDto> getAllSpecializations() {
-        return specializationRepository.findAll().stream()
+        return specializationRepository.findAllByDeletedFalse().stream()
                 .map(mapper::convertToDto)
                 .collect(Collectors.toSet());
     }
@@ -72,7 +72,9 @@ public class SpecializationServiceImpl implements SpecializationService {
         Specialization specialization = specializationRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No specialization found with id: " + id));
 
-        specializationRepository.delete(specialization);
+        specialization.setDeleted(true);
+
+        specializationRepository.save(specialization);
     }
 
     @Override

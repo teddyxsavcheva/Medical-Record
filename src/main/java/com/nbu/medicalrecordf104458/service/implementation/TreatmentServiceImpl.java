@@ -74,6 +74,9 @@ public class TreatmentServiceImpl implements TreatmentService {
         Treatment treatment = treatmentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No Treatment found with id: " + id));
 
+        treatment.getAppointments()
+                .forEach(appointment -> appointment.getTreatments().remove(treatment));
+
         treatmentRepository.delete(treatment);
     }
 

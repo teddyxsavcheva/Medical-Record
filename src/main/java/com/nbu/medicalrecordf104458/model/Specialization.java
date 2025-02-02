@@ -32,6 +32,9 @@ public class Specialization {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
+    @Column(name = "for_deletion", nullable = false)
+    private boolean deleted = false;
+
     @ManyToMany
     @JoinTable(name = "doctor_specialization",
             joinColumns = @JoinColumn(name = "specialization_id"),

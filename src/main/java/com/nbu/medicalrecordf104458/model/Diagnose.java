@@ -36,6 +36,9 @@ public class Diagnose {
     @Column(name = "description", nullable = false, length = 500)
     private String description;
 
+    @Column(name = "for_deletion", nullable = false)
+    private boolean deleted = false;
+
     @ManyToMany
     @JoinTable(
             name = "appointments_diagnoses",

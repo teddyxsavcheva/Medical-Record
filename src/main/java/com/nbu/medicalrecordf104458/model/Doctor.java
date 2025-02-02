@@ -51,6 +51,9 @@ public class Doctor {
     @OneToMany(mappedBy = "doctor")
     private Set<DoctorAppointment> appointments;
 
+    @Column(name = "for_deletion", nullable = false)
+    private boolean deleted = false;
+
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;

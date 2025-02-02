@@ -29,7 +29,7 @@ public class DiagnoseServiceImpl implements DiagnoseService {
     @Override
     @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     public Set<DiagnoseDto> getAllDiagnoses() {
-        return diagnoseRepository.findAll().stream()
+        return diagnoseRepository.findAllByDeletedFalse().stream()
                 .map(mapper::convertToDto)
                 .collect(Collectors.toSet());
     }
@@ -76,7 +76,10 @@ public class DiagnoseServiceImpl implements DiagnoseService {
         Diagnose diagnose = diagnoseRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No diagnose found with id: " + id));
 
-        diagnoseRepository.delete(diagnose);
+        // Soft deletion to not lose any data
+        diagnose.setDeleted(true);
+
+        diagnoseRepository.save(diagnose);
     }
 
     @Override
@@ -111,7 +114,7 @@ public class DiagnoseServiceImpl implements DiagnoseService {
     @Override
     @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     public Set<DiagnoseDto> findMostCommonDiagnoses() {
-        Set<Diagnose> diagnoses = new HashSet<>(diagnoseRepository.findAll());
+        Set<Diagnose> diagnoses = new HashSet<>(diagnoseRepository.findAllByDeletedFalse());
 
         Map<Long, Integer> diagnoseCountMap = new HashMap<>();
         int maxCount = 0;

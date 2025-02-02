@@ -34,7 +34,7 @@ public class PatientServiceImpl implements PatientService {
     @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     public Set<PatientDto> getAllPatients() {
 
-        return patientRepository.findAll().stream()
+        return patientRepository.findAllByDeletedFalse().stream()
                 .map(mapper::convertToDto)
                 .collect(Collectors.toSet());
     }
@@ -80,7 +80,9 @@ public class PatientServiceImpl implements PatientService {
         Patient patient = patientRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No patient found with id: " + id));
 
-        patientRepository.delete(patient);
+        patient.setDeleted(true);
+
+        patientRepository.save(patient);
     }
 
     @Override

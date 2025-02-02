@@ -44,6 +44,9 @@ public class Patient {
     @Column(name = "last_insurance_payment_date", nullable = false)
     private LocalDate lastInsurancePayment;
 
+    @Column(name = "for_deletion", nullable = false)
+    private boolean deleted = false;
+
     @NotNull(message = "Each patient should be assigned to a family doctor.")
     @ManyToOne
     @JoinColumn(name = "family_doctor_id", nullable = false)

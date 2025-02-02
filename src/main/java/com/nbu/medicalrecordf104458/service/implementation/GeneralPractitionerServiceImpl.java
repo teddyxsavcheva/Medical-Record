@@ -30,7 +30,7 @@ public class GeneralPractitionerServiceImpl implements GeneralPractitionerServic
     @Override
     @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     public Set<GeneralPractitionerDto> getAllDoctors() {
-        return gpRepository.findAll().stream()
+        return gpRepository.findAllByDeletedFalse().stream()
                 .map(gpMapper::convertToDto)
                 .collect(Collectors.toSet());
     }
@@ -83,7 +83,9 @@ public class GeneralPractitionerServiceImpl implements GeneralPractitionerServic
         GeneralPractitioner gp = gpRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No GP found with id: " + id));
 
-        gpRepository.delete(gp);
+        gp.setDeleted(true);
+
+        gpRepository.save(gp);
     }
 
     @Override
