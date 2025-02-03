@@ -43,6 +43,7 @@ public class PatientServiceImpl implements PatientService {
     @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR') or @customSecurityChecker.isPatientAccessingOwnData(#id)")
     public PatientDto getPatientById(Long id) {
         Patient patient = patientRepository.findById(id)
+                .filter(patient1 -> !patient1.isDeleted())
                 .orElseThrow(() -> new EntityNotFoundException("No patient found with id: " + id));
 
         return mapper.convertToDto(patient);
@@ -53,6 +54,10 @@ public class PatientServiceImpl implements PatientService {
     public PatientDto createPatient(PatientDto patientDto) {
         Patient patient = mapper.convertToEntity(patientDto);
 
+        if (patient.getFamilyDoctor().isDeleted()) {
+            throw new IllegalArgumentException("You can't use records that are marked for deletion!");
+        }
+
         return mapper.convertToDto(patientRepository.save(patient));
     }
 
@@ -60,6 +65,7 @@ public class PatientServiceImpl implements PatientService {
     @PreAuthorize("hasAuthority('ADMIN')")
     public PatientDto updatePatient(Long id, PatientDto patientDto) {
         Patient patient = patientRepository.findById(id)
+                .filter(patient1 -> !patient1.isDeleted())
                 .orElseThrow(() -> new EntityNotFoundException("No patient found with id: " + id));
 
         patient.setName(patientDto.getName());
@@ -67,6 +73,7 @@ public class PatientServiceImpl implements PatientService {
         patient.setLastInsurancePayment(patientDto.getLastInsurancePayment());
 
         GeneralPractitioner gp = gpRepository.findById(patientDto.getFamilyDoctorId())
+                .filter(generalPractitioner -> !generalPractitioner.isDeleted())
                 .orElseThrow(() -> new EntityNotFoundException("No GP found with id: " + patientDto.getFamilyDoctorId()));
 
         patient.setFamilyDoctor(gp);
@@ -78,6 +85,7 @@ public class PatientServiceImpl implements PatientService {
     @PreAuthorize("hasAuthority('ADMIN')")
     public void deletePatient(Long id) {
         Patient patient = patientRepository.findById(id)
+                .filter(patient1 -> !patient1.isDeleted())
                 .orElseThrow(() -> new EntityNotFoundException("No patient found with id: " + id));
 
         patient.setDeleted(true);
@@ -89,6 +97,7 @@ public class PatientServiceImpl implements PatientService {
     @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     public boolean isInsurancePaidLast6Months(Long patientId) {
         Patient patient = patientRepository.findById(patientId)
+                .filter(patient1 -> !patient1.isDeleted())
                 .orElseThrow(() -> new EntityNotFoundException("No patient found with id: " + patientId));
 
         LocalDate currentDate = LocalDate.now();
@@ -104,9 +113,9 @@ public class PatientServiceImpl implements PatientService {
     @Override
     @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     public Set<PatientDto> getPatientsByDiagnoseId(Long diagnoseId) {
-        if (!diagnoseRepository.existsById(diagnoseId)) {
-            throw new EntityNotFoundException("No Diagnose with id: " + diagnoseId);
-        }
+        diagnoseRepository.findById(diagnoseId)
+                .filter(diagnose -> !diagnose.isDeleted())
+                .orElseThrow(() -> new EntityNotFoundException("No Diagnose found with id: " + diagnoseId));
 
         return patientRepository.findPatientsByDiagnoseId(diagnoseId).stream()
                 .map(mapper::convertToDto)
@@ -116,9 +125,9 @@ public class PatientServiceImpl implements PatientService {
     @Override
     @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     public Set<PatientDto> getPatientsByGeneralPractitioner(Long gpId) {
-        if (!gpRepository.existsById(gpId)) {
-            throw new EntityNotFoundException("No GP with id: " + gpId);
-        }
+        gpRepository.findById(gpId)
+                .filter(generalPractitioner -> !generalPractitioner.isDeleted())
+                .orElseThrow(() -> new EntityNotFoundException("No GP found with id: " + gpId));
 
         return patientRepository.findPatientsByGeneralPractitionerId(gpId).stream()
                 .map(mapper::convertToDto)
@@ -128,9 +137,9 @@ public class PatientServiceImpl implements PatientService {
     @Override
     @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR') or @customSecurityChecker.isPatientAccessingOwnData(#patientId)")
     public Set<AppointmentDto> getVisitsByPatient(Long patientId) {
-        if (!patientRepository.existsById(patientId)) {
-            throw new EntityNotFoundException("No Patient found with id: " + patientId);
-        }
+        patientRepository.findById(patientId)
+                .filter(patient -> !patient.isDeleted())
+                .orElseThrow(() -> new EntityNotFoundException("No Patient found with id: " + patientId));
 
         return patientRepository.findVisitsByPatientId(patientId).stream()
                 .map(appointmentMapper::convertToDto)

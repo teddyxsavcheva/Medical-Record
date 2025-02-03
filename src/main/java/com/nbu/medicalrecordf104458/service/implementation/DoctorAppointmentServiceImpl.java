@@ -55,6 +55,14 @@ public class DoctorAppointmentServiceImpl implements DoctorAppointmentService {
     public AppointmentDto createAppointment(AppointmentDto appointmentDto) {
         DoctorAppointment appointment = mapper.convertToEntity(appointmentDto);
 
+        Set<Diagnose> diagnoses = appointment.getDiagnoses().stream()
+                .filter(diagnose -> !diagnose.isDeleted())
+                .collect(Collectors.toSet());
+
+        if (appointment.getDoctor().isDeleted() || appointment.getPatient().isDeleted() || diagnoses.isEmpty()) {
+            throw new IllegalArgumentException("You can't use records that are marked for deletion!");
+        }
+
         return mapper.convertToDto(appointmentRepository.save(appointment));
     }
 
@@ -67,13 +75,16 @@ public class DoctorAppointmentServiceImpl implements DoctorAppointmentService {
         appointment.setVisitDate(appointmentDto.getVisitDate());
 
         appointment.setPatient(patientRepository.findById(appointmentDto.getPatientId())
+                .filter(patient -> !patient.isDeleted())
                 .orElseThrow(() -> new EntityNotFoundException("No Patient found with id: " + appointmentDto.getPatientId())));
 
         appointment.setDoctor(doctorRepository.findById(appointmentDto.getDoctorId())
+                .filter(doctor -> !doctor.isDeleted())
                 .orElseThrow(() -> new EntityNotFoundException("No Doctor found with id: " + appointmentDto.getDoctorId())));
 
         appointment.setDiagnoses(appointmentDto.getDiagnoses().stream()
                 .map(diagnoseId -> diagnoseRepository.findById(diagnoseId)
+                        .filter(diagnose -> !diagnose.isDeleted())
                         .orElseThrow(() -> new EntityNotFoundException("No Diagnose found with id: " + diagnoseId)))
                 .collect(Collectors.toSet()));
 
@@ -110,6 +121,7 @@ public class DoctorAppointmentServiceImpl implements DoctorAppointmentService {
                 .orElseThrow(() -> new EntityNotFoundException("No Appointment found with id: " + appointmentId));
 
         Diagnose diagnose = diagnoseRepository.findById(diagnoseId)
+                .filter(diagnose1 -> !diagnose1.isDeleted())
                 .orElseThrow(() -> new EntityNotFoundException("No Diagnose found with id: " + diagnoseId));
 
         appointment.getDiagnoses().add(diagnose);
@@ -124,6 +136,7 @@ public class DoctorAppointmentServiceImpl implements DoctorAppointmentService {
                 .orElseThrow(() -> new EntityNotFoundException("No Appointment found with id: " + appointmentId));
 
         Diagnose diagnose = diagnoseRepository.findById(diagnoseId)
+                .filter(diagnose1 -> !diagnose1.isDeleted())
                 .orElseThrow(() -> new EntityNotFoundException("No Diagnose found with id: " + diagnoseId));
 
         appointment.getDiagnoses().remove(diagnose);
@@ -173,6 +186,10 @@ public class DoctorAppointmentServiceImpl implements DoctorAppointmentService {
     @Override
     @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     public Set<AppointmentDto> findAppointmentsByDoctorAndDateRange(Long doctorId, LocalDate startDate, LocalDate endDate) {
+        doctorRepository.findById(doctorId)
+                .filter(doctor -> !doctor.isDeleted())
+                .orElseThrow(() -> new EntityNotFoundException("No Doctor found with id: " + doctorId));
+
         return appointmentRepository.findAppointmentsByDoctorAndDateRange(doctorId, startDate, endDate).stream()
                 .map(mapper::convertToDto)
                 .collect(Collectors.toSet());

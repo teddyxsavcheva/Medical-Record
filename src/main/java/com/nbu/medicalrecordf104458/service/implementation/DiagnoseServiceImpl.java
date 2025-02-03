@@ -38,6 +38,7 @@ public class DiagnoseServiceImpl implements DiagnoseService {
     @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     public DiagnoseDto getDiagnoseById(Long id) {
         Diagnose diagnose = diagnoseRepository.findById(id)
+                .filter(diagnose1 -> !diagnose1.isDeleted())
                 .orElseThrow(() -> new EntityNotFoundException("No diagnose found with id: " + id));
 
         return mapper.convertToDto(diagnose);
@@ -55,6 +56,7 @@ public class DiagnoseServiceImpl implements DiagnoseService {
     @PreAuthorize("hasAuthority('ADMIN')")
     public DiagnoseDto updateDiagnose(Long id, DiagnoseDto diagnoseDto) {
         Diagnose diagnose = diagnoseRepository.findById(id)
+                .filter(diagnose1 -> !diagnose1.isDeleted())
                 .orElseThrow(() -> new EntityNotFoundException("No diagnose found with id: " + id));
 
         diagnose.setName(diagnoseDto.getName());
@@ -74,6 +76,7 @@ public class DiagnoseServiceImpl implements DiagnoseService {
     @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteDiagnose(Long id) {
         Diagnose diagnose = diagnoseRepository.findById(id)
+                .filter(diagnose1 -> !diagnose1.isDeleted())
                 .orElseThrow(() -> new EntityNotFoundException("No diagnose found with id: " + id));
 
         // Soft deletion to not lose any data
@@ -86,6 +89,7 @@ public class DiagnoseServiceImpl implements DiagnoseService {
     @PreAuthorize("hasAuthority('ADMIN')")
     public DiagnoseDto addAppointment(Long diagnoseId, Long appointmentId) {
         Diagnose diagnose = diagnoseRepository.findById(diagnoseId)
+                .filter(diagnose1 -> !diagnose1.isDeleted())
                 .orElseThrow(() -> new EntityNotFoundException("No diagnose found with id: " + diagnoseId));
 
         DoctorAppointment appointment = appointmentRepository.findById(appointmentId)
@@ -100,6 +104,7 @@ public class DiagnoseServiceImpl implements DiagnoseService {
     @PreAuthorize("hasAuthority('ADMIN')")
     public DiagnoseDto removeAppointment(Long diagnoseId, Long appointmentId) {
         Diagnose diagnose = diagnoseRepository.findById(diagnoseId)
+                .filter(diagnose1 -> !diagnose1.isDeleted())
                 .orElseThrow(() -> new EntityNotFoundException("No diagnose found with id: " + diagnoseId));
 
         DoctorAppointment appointment = appointmentRepository.findById(appointmentId)

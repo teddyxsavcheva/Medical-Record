@@ -76,6 +76,7 @@ public class UserServiceImpl implements UserService {
 
         DoctorDto savedDoctor = doctorService.createDoctor(doctorToSave);
         Doctor savedEntity = doctorRepository.findById(savedDoctor.getId())
+                .filter(doctor -> !doctor.isDeleted())
                 .orElseThrow(() -> new EntityNotFoundException("No doctor found with id: " + savedDoctor.getId()));
 
         User user = User.builder()
@@ -107,6 +108,7 @@ public class UserServiceImpl implements UserService {
 
         GeneralPractitionerDto savedGp = gpService.createDoctor(gpToSave);
         GeneralPractitioner savedEntity = gPRepository.findById(savedGp.getDoctor().getId())
+                .filter(generalPractitioner -> !generalPractitioner.isDeleted())
                 .orElseThrow(() -> new EntityNotFoundException("No GP found with id: " + savedGp.getDoctor().getId()));
 
         User user = User.builder()
@@ -140,6 +142,7 @@ public class UserServiceImpl implements UserService {
 
         PatientDto savedPatient = patientService.createPatient(patientToSave);
         Patient savedEntity = patientRepository.findById(savedPatient.getId())
+                .filter(patient -> !patient.isDeleted())
                 .orElseThrow(() -> new EntityNotFoundException("No patient found with id: " + savedPatient.getId()));
 
         User user = User.builder()

@@ -34,7 +34,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests
                         (auth -> auth
                                 //.requestMatchers("/api/v1/auth/**").permitAll()
-                                .requestMatchers("/api/v1/auth/register/**").hasAuthority("ADMIN")
+                                .requestMatchers("/api/v1/auth/register/**").permitAll()
                                 .requestMatchers("/api/v1/auth/register-doctor/**").hasAuthority("ADMIN")
                                 .requestMatchers("/api/v1/auth/register-gp/**").hasAuthority("ADMIN")
                                 .requestMatchers("/api/v1/auth/register-patient/**").hasAuthority("ADMIN")

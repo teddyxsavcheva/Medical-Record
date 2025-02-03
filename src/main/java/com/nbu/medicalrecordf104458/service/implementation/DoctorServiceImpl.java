@@ -39,6 +39,7 @@ public class DoctorServiceImpl implements DoctorService {
     @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     public DoctorDto getDoctorById(Long id) {
         Doctor doctor = doctorRepository.findById(id)
+                .filter(doctor1 -> !doctor1.isDeleted())
                 .orElseThrow(() -> new EntityNotFoundException("No doctor found with id: " + id));
 
         return mapper.convertToDto(doctor);
@@ -49,6 +50,14 @@ public class DoctorServiceImpl implements DoctorService {
     public DoctorDto createDoctor(DoctorDto doctorDto) {
         Doctor doctor = mapper.convertToEntity(doctorDto);
 
+        Set<Specialization> specializations = doctor.getSpecializations().stream()
+                .filter(specialization -> !specialization.isDeleted())
+                .collect(Collectors.toSet());
+
+        if (specializations.isEmpty()) {
+            throw new IllegalArgumentException("You can't use records that are marked for deletion!");
+        }
+
         return mapper.convertToDto(doctorRepository.save(doctor));
     }
 
@@ -56,6 +65,7 @@ public class DoctorServiceImpl implements DoctorService {
     @PreAuthorize("hasAuthority('ADMIN')")
     public DoctorDto updateDoctor(Long id, DoctorDto doctorDto) {
         Doctor doctor = doctorRepository.findById(id)
+                .filter(doctor1 -> !doctor1.isDeleted())
                 .orElseThrow(() -> new EntityNotFoundException("No doctor found with id: " + id));
 
         doctor.setName(doctorDto.getName());
@@ -63,6 +73,7 @@ public class DoctorServiceImpl implements DoctorService {
         if (!doctorDto.getSpecializationIds().isEmpty()) {
             doctor.setSpecializations(doctorDto.getSpecializationIds().stream()
                     .map(specializationId -> specializationRepository.findById(specializationId)
+                            .filter(specialization -> !specialization.isDeleted())
                             .orElseThrow(() -> new EntityNotFoundException("No Specialization found with id: " + specializationId)))
                     .collect(Collectors.toSet()));
         }
@@ -74,6 +85,7 @@ public class DoctorServiceImpl implements DoctorService {
     @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteDoctor(Long id) {
         Doctor doctor = doctorRepository.findById(id)
+                .filter(doctor1 -> !doctor1.isDeleted())
                 .orElseThrow(() -> new EntityNotFoundException("No doctor found with id: " + id));
 
         doctor.setDeleted(true);
@@ -85,9 +97,11 @@ public class DoctorServiceImpl implements DoctorService {
     @PreAuthorize("hasAuthority('ADMIN')")
     public DoctorDto addSpecialization(Long doctorId, Long specializationId) {
         Doctor doctor = doctorRepository.findById(doctorId)
+                .filter(doctor1 -> !doctor1.isDeleted())
                 .orElseThrow(() -> new EntityNotFoundException("No doctor found with id: " + doctorId));
 
         Specialization specialization = specializationRepository.findById(specializationId)
+                .filter(specialization1 -> !specialization1.isDeleted())
                 .orElseThrow(() -> new EntityNotFoundException("No specialization found with id: " + specializationId));
 
         doctor.getSpecializations().add(specialization);
@@ -99,9 +113,11 @@ public class DoctorServiceImpl implements DoctorService {
     @PreAuthorize("hasAuthority('ADMIN')")
     public DoctorDto removeSpecialization(Long doctorId, Long specializationId) {
         Doctor doctor = doctorRepository.findById(doctorId)
+                .filter(doctor2 -> !doctor2.isDeleted())
                 .orElseThrow(() -> new EntityNotFoundException("No doctor found with id: " + doctorId));
 
         Specialization specialization = specializationRepository.findById(specializationId)
+                .filter(specialization1 -> !specialization1.isDeleted())
                 .orElseThrow(() -> new EntityNotFoundException("No specialization found with id: " + specializationId));
 
         doctor.getSpecializations().remove(specialization);

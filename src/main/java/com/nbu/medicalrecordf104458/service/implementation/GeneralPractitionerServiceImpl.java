@@ -39,6 +39,7 @@ public class GeneralPractitionerServiceImpl implements GeneralPractitionerServic
     @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
     public GeneralPractitionerDto getDoctorById(Long id) {
         GeneralPractitioner gp = gpRepository.findById(id)
+                .filter(generalPractitioner -> !generalPractitioner.isDeleted())
                 .orElseThrow(() -> new EntityNotFoundException("No GP found with id: " + id));
 
         return gpMapper.convertToDto(gp);
@@ -49,6 +50,18 @@ public class GeneralPractitionerServiceImpl implements GeneralPractitionerServic
     public GeneralPractitionerDto createDoctor(GeneralPractitionerDto gpDto) {
         GeneralPractitioner gp = gpMapper.convertToEntity(gpDto);
 
+        Set<Specialization> specializations = gp.getSpecializations().stream()
+                .filter(specialization -> !specialization.isDeleted())
+                .collect(Collectors.toSet());
+
+        Set<Patient> patients = gp.getPatients().stream()
+                .filter(patient -> !patient.isDeleted())
+                .collect(Collectors.toSet());
+
+        if (specializations.isEmpty() || patients.isEmpty()) {
+            throw new IllegalArgumentException("You can't use records that are marked for deletion!");
+        }
+
         return gpMapper.convertToDto(gpRepository.save(gp));
     }
 
@@ -56,6 +69,7 @@ public class GeneralPractitionerServiceImpl implements GeneralPractitionerServic
     @PreAuthorize("hasAuthority('ADMIN')")
     public GeneralPractitionerDto updateDoctor(Long id, GeneralPractitionerDto gpDto) {
         GeneralPractitioner gp = gpRepository.findById(id)
+                .filter(generalPractitioner -> !generalPractitioner.isDeleted())
                 .orElseThrow(() -> new EntityNotFoundException("No GP found with id: " + id));
 
         gp.setName(gpDto.getDoctor().getName());
@@ -63,6 +77,7 @@ public class GeneralPractitionerServiceImpl implements GeneralPractitionerServic
         if (!gpDto.getDoctor().getSpecializationIds().isEmpty()) {
             gp.setSpecializations(gpDto.getDoctor().getSpecializationIds().stream()
                     .map(specializationId -> specializationRepository.findById(specializationId)
+                            .filter(specialization -> !specialization.isDeleted())
                             .orElseThrow(() -> new EntityNotFoundException("No Specialization found with id: " + specializationId)))
                     .collect(Collectors.toSet()));
         }
@@ -70,6 +85,7 @@ public class GeneralPractitionerServiceImpl implements GeneralPractitionerServic
         if (!gpDto.getPatients().isEmpty()) {
             gp.setPatients(gpDto.getPatients().stream()
                     .map(patientId -> patientRepository.findById(patientId)
+                            .filter(patient -> !patient.isDeleted())
                             .orElseThrow(() -> new EntityNotFoundException("No Patient found with id: " + patientId)))
                     .collect(Collectors.toSet()));
         }
@@ -81,6 +97,7 @@ public class GeneralPractitionerServiceImpl implements GeneralPractitionerServic
     @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteDoctor(Long id) {
         GeneralPractitioner gp = gpRepository.findById(id)
+                .filter(generalPractitioner -> !generalPractitioner.isDeleted())
                 .orElseThrow(() -> new EntityNotFoundException("No GP found with id: " + id));
 
         gp.setDeleted(true);
@@ -92,9 +109,11 @@ public class GeneralPractitionerServiceImpl implements GeneralPractitionerServic
     @PreAuthorize("hasAuthority('ADMIN')")
     public GeneralPractitionerDto addSpecialization(Long gpId, Long specializationId) {
         GeneralPractitioner gp = gpRepository.findById(gpId)
+                .filter(generalPractitioner -> !generalPractitioner.isDeleted())
                 .orElseThrow(() -> new EntityNotFoundException("No GP found with id: " + gpId));
 
         Specialization specialization = specializationRepository.findById(specializationId)
+                .filter(specialization1 -> !specialization1.isDeleted())
                 .orElseThrow(() -> new EntityNotFoundException("No specialization found with id: " + specializationId));
 
         gp.getSpecializations().add(specialization);
@@ -105,9 +124,11 @@ public class GeneralPractitionerServiceImpl implements GeneralPractitionerServic
     @Override
     public GeneralPractitionerDto removeSpecialization(Long gpId, Long specializationId) {
         GeneralPractitioner gp = gpRepository.findById(gpId)
+                .filter(generalPractitioner -> !generalPractitioner.isDeleted())
                 .orElseThrow(() -> new EntityNotFoundException("No GP found with id: " + gpId));
 
         Specialization specialization = specializationRepository.findById(specializationId)
+                .filter(specialization1 -> !specialization1.isDeleted())
                 .orElseThrow(() -> new EntityNotFoundException("No specialization found with id: " + specializationId));
 
         gp.getSpecializations().remove(specialization);
@@ -119,9 +140,11 @@ public class GeneralPractitionerServiceImpl implements GeneralPractitionerServic
     @PreAuthorize("hasAuthority('ADMIN')")
     public GeneralPractitionerDto addPatient(Long gpId, Long patientId) {
         GeneralPractitioner gp = gpRepository.findById(gpId)
+                .filter(generalPractitioner -> !generalPractitioner.isDeleted())
                 .orElseThrow(() -> new EntityNotFoundException("No GP found with id: " + gpId));
 
         Patient patient = patientRepository.findById(patientId)
+                .filter(patient1 -> !patient1.isDeleted())
                 .orElseThrow(() -> new EntityNotFoundException("No patient found with id: " + patientId));
 
         gp.getPatients().add(patient);
@@ -133,9 +156,11 @@ public class GeneralPractitionerServiceImpl implements GeneralPractitionerServic
     @PreAuthorize("hasAuthority('ADMIN')")
     public GeneralPractitionerDto removePatient(Long gpId, Long patientId) {
         GeneralPractitioner gp = gpRepository.findById(gpId)
+                .filter(generalPractitioner -> !generalPractitioner.isDeleted())
                 .orElseThrow(() -> new EntityNotFoundException("No GP found with id: " + gpId));
 
         Patient patient = patientRepository.findById(patientId)
+                .filter(patient1 -> !patient1.isDeleted())
                 .orElseThrow(() -> new EntityNotFoundException("No patient found with id: " + patientId));
 
         gp.getPatients().remove(patient);
