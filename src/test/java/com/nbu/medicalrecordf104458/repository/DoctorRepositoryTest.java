@@ -136,7 +136,7 @@ public class DoctorRepositoryTest {
     }
 
     @Test
-    public void doctorRepo_delete_removesDoctor() {
+    public void doctorRepo_delete_setsDeletedFlag() {
         doctor.setDeleted(true);
         doctorRepository.save(doctor);
         Optional<Doctor> deletedDoctor = doctorRepository.findById(doctor.getId());

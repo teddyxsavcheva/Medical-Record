@@ -114,7 +114,7 @@ public class DiagnoseRepositoryTest {
     }
 
     @Test
-    public void diagnoseRepo_delete_removesDiagnose() {
+    public void diagnoseRepo_delete_setsDeletedFlag() {
         fluDiagnose.setDeleted(true);
         diagnoseRepository.save(fluDiagnose);
         Optional<Diagnose> deletedDiagnose = diagnoseRepository.findById(fluDiagnose.getId());
