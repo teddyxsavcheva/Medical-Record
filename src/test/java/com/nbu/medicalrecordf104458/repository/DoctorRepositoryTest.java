@@ -2,6 +2,7 @@ package com.nbu.medicalrecordf104458.repository;
 
 import com.nbu.medicalrecordf104458.dto.queries.DoctorAppointmentsCountDto;
 import com.nbu.medicalrecordf104458.model.*;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,11 +12,13 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
@@ -56,12 +59,12 @@ public class DoctorRepositoryTest {
 
         doctor = new Doctor();
         doctor.setName("Dr. Doctor Doctorov");
-        doctor.setSpecializations(Set.of(specialization));
+        doctor.setSpecializations(new HashSet<>(Set.of(specialization)));
         doctor = doctorRepository.save(doctor);
 
         gp = new GeneralPractitioner();
         gp.setName("Dr. Lichen Lekar");
-        gp.setSpecializations(Set.of(specialization));
+        gp.setSpecializations(new HashSet<>(Set.of(specialization)));
         gp = gpRepository.save(gp);
 
         patient = new Patient();
@@ -75,14 +78,14 @@ public class DoctorRepositoryTest {
         appointment1.setVisitDate(LocalDate.of(2025, 1, 31));
         appointment1.setDoctor(doctor);
         appointment1.setPatient(patient);
-        appointment1.setDiagnoses(Set.of(diagnose));
+        appointment1.setDiagnoses(new HashSet<>(Set.of(diagnose)));
         appointment1 = appointmentRepository.save(appointment1);
 
         appointment2 = new DoctorAppointment();
         appointment2.setVisitDate(LocalDate.of(2025, 2, 1));
         appointment2.setDoctor(doctor);
         appointment2.setPatient(patient);
-        appointment2.setDiagnoses(Set.of(diagnose));
+        appointment2.setDiagnoses(new HashSet<>(Set.of(diagnose)));
         appointment2 = appointmentRepository.save(appointment2);
     }
 
@@ -110,6 +113,16 @@ public class DoctorRepositoryTest {
     }
 
     @Test
+    public void doctorRepo_findById_throwsEntityNotFoundException() {
+        doctor.setDeleted(true);
+        assertThrows(EntityNotFoundException.class, () ->
+                doctorRepository.findById(doctor.getId())
+                        .filter(diagnose -> !diagnose.isDeleted())
+                        .orElseThrow(EntityNotFoundException::new)
+        );
+    }
+
+    @Test
     public void doctorRepo_save_savesDoctor() {
         Doctor newDoctor = new Doctor();
         newDoctor.setName("Dr. New");
@@ -124,10 +137,11 @@ public class DoctorRepositoryTest {
 
     @Test
     public void doctorRepo_delete_removesDoctor() {
-        appointmentRepository.deleteAll();
-        doctorRepository.delete(doctor);
+        doctor.setDeleted(true);
+        doctorRepository.save(doctor);
         Optional<Doctor> deletedDoctor = doctorRepository.findById(doctor.getId());
-        assertThat(deletedDoctor).isNotPresent();
+
+        assertThat(deletedDoctor.get().isDeleted()).isTrue();
     }
 
     @Test

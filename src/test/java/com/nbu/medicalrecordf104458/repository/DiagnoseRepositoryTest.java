@@ -81,6 +81,13 @@ public class DiagnoseRepositoryTest {
                 diagnoseRepository.findById(notFoundId)
                         .orElseThrow(EntityNotFoundException::new)
         );
+
+        fluDiagnose.setDeleted(true);
+        assertThrows(EntityNotFoundException.class, () ->
+                diagnoseRepository.findById(fluDiagnose.getId())
+                        .filter(diagnose -> !diagnose.isDeleted())
+                        .orElseThrow(EntityNotFoundException::new)
+        );
     }
 
     @Test
@@ -108,10 +115,11 @@ public class DiagnoseRepositoryTest {
 
     @Test
     public void diagnoseRepo_delete_removesDiagnose() {
-        diagnoseRepository.delete(fluDiagnose);
+        fluDiagnose.setDeleted(true);
+        diagnoseRepository.save(fluDiagnose);
         Optional<Diagnose> deletedDiagnose = diagnoseRepository.findById(fluDiagnose.getId());
 
-        assertThat(deletedDiagnose).isNotPresent();
+        assertThat(deletedDiagnose.get().isDeleted()).isTrue();
     }
 
 }
