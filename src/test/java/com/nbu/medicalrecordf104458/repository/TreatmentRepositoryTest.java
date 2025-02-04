@@ -5,8 +5,8 @@ import com.nbu.medicalrecordf104458.model.Doctor;
 import com.nbu.medicalrecordf104458.model.DoctorAppointment;
 import com.nbu.medicalrecordf104458.model.GeneralPractitioner;
 import com.nbu.medicalrecordf104458.model.Patient;
-import com.nbu.medicalrecordf104458.model.SickLeave;
 import com.nbu.medicalrecordf104458.model.Specialization;
+import com.nbu.medicalrecordf104458.model.Treatment;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,6 +17,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -24,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
-public class SickLeaveRepositoryTest {
+public class TreatmentRepositoryTest {
 
     @Autowired
     private SpecializationRepository specializationRepository;
@@ -39,15 +40,16 @@ public class SickLeaveRepositoryTest {
     @Autowired
     private DoctorAppointmentRepository appointmentRepository;
     @Autowired
-    private SickLeaveRepository sickLeaveRepository;
+    private TreatmentRepository treatmentRepository;
 
     private Specialization specialization;
+    private Treatment treatment;
     private Diagnose diagnose;
     private Doctor doctor;
     private GeneralPractitioner gp;
     private Patient patient;
+    private DoctorAppointment appointment1;
     private DoctorAppointment appointment;
-    private SickLeave sickLeave;
 
     @BeforeEach
     public void setUp() {
@@ -78,24 +80,23 @@ public class SickLeaveRepositoryTest {
         patient.setUnifiedCivilNumber(1234L);
         patient = patientRepository.save(patient);
 
+        treatment = new Treatment();
+        treatment.setMedicineName("Ibuprofen");
+        treatment.setDosageAmount("200mg");
+        treatment.setFrequency("Twice a day");
+        treatment = treatmentRepository.save(treatment);
+
         appointment = new DoctorAppointment();
-        appointment.setVisitDate(LocalDate.of(2025, 1, 31));
+        appointment.setVisitDate(LocalDate.of(2025, 2, 1));
         appointment.setDoctor(doctor);
         appointment.setPatient(patient);
         appointment.setDiagnoses(new HashSet<>(Set.of(diagnose)));
         appointment = appointmentRepository.save(appointment);
-
-        sickLeave = new SickLeave();
-        sickLeave.setStartDate(LocalDate.of(2025, 2, 1));
-        sickLeave.setEndDate(LocalDate.of(2025, 2, 10));
-        sickLeave.setDoctorAppointment(appointment);
-        sickLeave = sickLeaveRepository.save(sickLeave);
-
     }
 
     @AfterEach
     public void tearDown() {
-        sickLeaveRepository.deleteAll();
+        // Deleting in reverse order to avoid foreign key constraint issues
         appointmentRepository.deleteAll();
         patientRepository.deleteAll();
         gpRepository.deleteAll();
@@ -105,31 +106,37 @@ public class SickLeaveRepositoryTest {
     }
 
     @Test
-    public void sickLeaveRepo_findById_returnsSickLeave() {
-        Optional<SickLeave> foundSickLeave = sickLeaveRepository.findById(sickLeave.getId());
-        assertThat(foundSickLeave).isPresent();
-        assertThat(foundSickLeave.get().getStartDate()).isEqualTo(LocalDate.of(2025, 2, 1));
+    public void treatmentRepo_findAll_returnsAllTreatments() {
+        List<Treatment> treatments = treatmentRepository.findAll();
+        assertThat(treatments).isNotNull().hasSize(1);
     }
 
     @Test
-    public void sickLeaveRepo_save_savesSickLeave() {
-        SickLeave newSickLeave = new SickLeave();
-        newSickLeave.setStartDate(LocalDate.of(2025, 3, 1));
-        newSickLeave.setEndDate(LocalDate.of(2025, 3, 10));
-        newSickLeave.setDoctorAppointment(appointment);
-        SickLeave savedSickLeave = sickLeaveRepository.save(newSickLeave);
-
-        assertThat(savedSickLeave).isNotNull();
-        assertThat(savedSickLeave.getId()).isNotNull();
-        assertThat(savedSickLeave.getStartDate()).isEqualTo(LocalDate.of(2025, 3, 1));
+    public void treatmentRepo_findById_returnsTreatment() {
+        Optional<Treatment> foundTreatment = treatmentRepository.findById(treatment.getId());
+        assertThat(foundTreatment).isPresent();
+        assertThat(foundTreatment.get().getMedicineName()).isEqualTo("Ibuprofen");
     }
 
     @Test
-    public void sickLeaveRepo_delete_removesSickLeave() {
-        sickLeaveRepository.delete(sickLeave);
-        Optional<SickLeave> deletedSickLeave = sickLeaveRepository.findById(sickLeave.getId());
+    public void treatmentRepo_save_savesTreatment() {
+        Treatment newTreatment = new Treatment();
+        newTreatment.setMedicineName("Paracetamol");
+        newTreatment.setDosageAmount("500mg");
+        newTreatment.setFrequency("Once a day");
 
-        assertThat(deletedSickLeave).isNotPresent();
+        Treatment savedTreatment = treatmentRepository.save(newTreatment);
+
+        assertThat(savedTreatment).isNotNull();
+        assertThat(savedTreatment.getId()).isNotNull();
+        assertThat(savedTreatment.getMedicineName()).isEqualTo("Paracetamol");
+    }
+
+    @Test
+    public void treatmentRepo_delete_removesTreatment() {
+        treatmentRepository.delete(treatment);
+        Optional<Treatment> deletedTreatment = treatmentRepository.findById(treatment.getId());
+        assertThat(deletedTreatment).isNotPresent();
     }
 
 }
