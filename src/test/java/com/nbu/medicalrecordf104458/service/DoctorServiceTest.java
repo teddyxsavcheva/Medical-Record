@@ -200,10 +200,11 @@ public class DoctorServiceTest {
     @Test
     void doctorService_addSpecialization_returnsDoctorDto() {
         Specialization specialization = new Specialization();
+        specialization.setId(2L);
         when(doctorRepository.findById(1L)).thenReturn(Optional.of(doctor));
-        when(specializationRepository.findById(1L)).thenReturn(Optional.of(specialization));
+        when(specializationRepository.findById(2L)).thenReturn(Optional.of(specialization));
 
-        doctorService.addSpecialization(1L, 1L);
+        doctorService.addSpecialization(1L, 2L);
 
         verify(doctorRepository).save(doctor);
         assertTrue(doctor.getSpecializations().contains(specialization));
@@ -326,6 +327,5 @@ public class DoctorServiceTest {
         assertTrue(result.stream().anyMatch(d -> d.getId() == 1L));
         assertTrue(result.stream().anyMatch(d -> d.getId() == 2L));
     }
-
 
 }
