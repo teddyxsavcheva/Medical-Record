@@ -142,7 +142,6 @@ public class DoctorServiceTest {
     @Test
     void doctorService_createDoctor_throwsIllegalArgumentException() {
         specialization.setDeleted(true);
-        doctor.setSpecializations(Set.of(specialization));
         when(doctorMapper.convertToEntity(doctorDto)).thenReturn(doctor);
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
