@@ -2,8 +2,14 @@ package com.nbu.medicalrecordf104458.service;
 
 import com.nbu.medicalrecordf104458.dto.DiagnoseDto;
 import com.nbu.medicalrecordf104458.mapper.DiagnoseMapper;
-import com.nbu.medicalrecordf104458.model.*;
-import com.nbu.medicalrecordf104458.repository.*;
+import com.nbu.medicalrecordf104458.model.Diagnose;
+import com.nbu.medicalrecordf104458.model.Doctor;
+import com.nbu.medicalrecordf104458.model.DoctorAppointment;
+import com.nbu.medicalrecordf104458.model.GeneralPractitioner;
+import com.nbu.medicalrecordf104458.model.Patient;
+import com.nbu.medicalrecordf104458.model.Specialization;
+import com.nbu.medicalrecordf104458.repository.DiagnoseRepository;
+import com.nbu.medicalrecordf104458.repository.DoctorAppointmentRepository;
 import com.nbu.medicalrecordf104458.service.implementation.DiagnoseServiceImpl;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,11 +20,19 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class DiagnoseServiceTest {

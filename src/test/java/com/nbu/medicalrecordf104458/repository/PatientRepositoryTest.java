@@ -1,6 +1,10 @@
 package com.nbu.medicalrecordf104458.repository;
 
-import com.nbu.medicalrecordf104458.model.*;
+import com.nbu.medicalrecordf104458.model.Diagnose;
+import com.nbu.medicalrecordf104458.model.DoctorAppointment;
+import com.nbu.medicalrecordf104458.model.GeneralPractitioner;
+import com.nbu.medicalrecordf104458.model.Patient;
+import com.nbu.medicalrecordf104458.model.Specialization;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
