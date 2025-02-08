@@ -31,6 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -113,6 +114,18 @@ public class SpecializationServiceTest {
         sickLeave.setDoctorAppointment(appointment);
         appointment.setSickLeave(sickLeave);
 
+    }
+
+    @Test
+    public void specializationService_getAllSpecializations_returnsAllSpecializations() {
+        when(specializationRepository.findAllByDeletedFalse()).thenReturn(Set.of(specialization));
+        when(specializationMapper.convertToDto(any(Specialization.class))).thenReturn(specializationDto);
+
+        Set<SpecializationDto> result = specializationService.getAllSpecializations();
+
+        assertEquals(1, result.size());
+        verify(specializationRepository, times(1)).findAllByDeletedFalse();
+        verify(specializationMapper, times(1)).convertToDto(any(Specialization.class));
     }
 
     @Test

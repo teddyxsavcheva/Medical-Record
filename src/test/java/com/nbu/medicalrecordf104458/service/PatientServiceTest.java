@@ -34,6 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -132,6 +133,18 @@ public class PatientServiceTest {
         appointmentDto.setPatientId(patient.getId());
         appointmentDto.setDiagnoses(new HashSet<>(Set.of(diagnose.getId())));
         appointmentDto.setSickLeaveId(sickLeave.getId());
+    }
+
+    @Test
+    public void patientService_getAllPatients_returnsAllPatients() {
+        when(patientRepository.findAllByDeletedFalse()).thenReturn(Set.of(patient));
+        when(patientMapper.convertToDto(any(Patient.class))).thenReturn(patientDto);
+
+        Set<PatientDto> result = patientService.getAllPatients();
+
+        assertEquals(1, result.size());
+        verify(patientRepository, times(1)).findAllByDeletedFalse();
+        verify(patientMapper, times(1)).convertToDto(any(Patient.class));
     }
 
     @Test

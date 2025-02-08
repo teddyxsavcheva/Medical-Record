@@ -27,6 +27,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -36,6 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -131,6 +133,18 @@ public class DoctorAppointmentServiceTest {
         appointmentDto.setPatientId(patient.getId());
         appointmentDto.setDiagnoses(new HashSet<>(Set.of(diagnose.getId())));
         appointmentDto.setSickLeaveId(sickLeave.getId());
+    }
+
+    @Test
+    public void doctorAppointmentService_getAllAppointments_returnsAllAppointments() {
+        when(appointmentRepository.findAll()).thenReturn(List.of(appointment));
+        when(appointmentMapper.convertToDto(any(DoctorAppointment.class))).thenReturn(appointmentDto);
+
+        Set<AppointmentDto> result = appointmentService.getAllAppointments();
+
+        assertEquals(1, result.size());
+        verify(appointmentRepository, times(1)).findAll();
+        verify(appointmentMapper, times(1)).convertToDto(any(DoctorAppointment.class));
     }
 
     @Test

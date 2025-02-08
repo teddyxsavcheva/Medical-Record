@@ -34,6 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -122,6 +123,18 @@ public class GeneralPractitionerServiceTest {
         sickLeave.setEndDate(LocalDate.of(2025, 2, 10));
         sickLeave.setDoctorAppointment(appointment);
         appointment.setSickLeave(sickLeave);
+    }
+
+    @Test
+    public void gpService_getAllGps_returnsAllGps() {
+        when(gpRepository.findAllByDeletedFalse()).thenReturn(Set.of(gp));
+        when(gpMapper.convertToDto(any(GeneralPractitioner.class))).thenReturn(gpDto);
+
+        Set<GeneralPractitionerDto> result = gpService.getAllDoctors();
+
+        assertEquals(1, result.size());
+        verify(gpRepository, times(1)).findAllByDeletedFalse();
+        verify(gpMapper, times(1)).convertToDto(any(GeneralPractitioner.class));
     }
 
     @Test
