@@ -3,7 +3,6 @@ package com.nbu.medicalrecordf104458.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nbu.medicalrecordf104458.config.JwtAuthFilter;
 import com.nbu.medicalrecordf104458.dto.AppointmentDto;
-import com.nbu.medicalrecordf104458.dto.DiagnoseDto;
 import com.nbu.medicalrecordf104458.model.Diagnose;
 import com.nbu.medicalrecordf104458.model.Doctor;
 import com.nbu.medicalrecordf104458.model.DoctorAppointment;
