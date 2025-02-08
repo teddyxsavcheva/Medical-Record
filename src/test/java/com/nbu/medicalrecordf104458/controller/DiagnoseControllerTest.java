@@ -63,7 +63,6 @@ public class DiagnoseControllerTest {
                 "or certain foods, which can cause symptoms ranging from sneezing and itching to more severe reactions such as anaphylaxis.", new HashSet<>());
 
         mockDiagnoses = Set.of(fluDto, allergyDto);
-
     }
 
     @Test
