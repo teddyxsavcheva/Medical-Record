@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nbu.medicalrecordf104458.config.JwtAuthFilter;
 import com.nbu.medicalrecordf104458.dto.AppointmentDto;
 import com.nbu.medicalrecordf104458.dto.DiagnoseDto;
+import com.nbu.medicalrecordf104458.dto.DoctorDto;
+import com.nbu.medicalrecordf104458.dto.queries.DoctorAppointmentsCountDto;
 import com.nbu.medicalrecordf104458.model.Diagnose;
 import com.nbu.medicalrecordf104458.model.Doctor;
 import com.nbu.medicalrecordf104458.model.DoctorAppointment;
@@ -12,7 +14,7 @@ import com.nbu.medicalrecordf104458.model.Patient;
 import com.nbu.medicalrecordf104458.model.SickLeave;
 import com.nbu.medicalrecordf104458.model.Specialization;
 import com.nbu.medicalrecordf104458.model.Treatment;
-import com.nbu.medicalrecordf104458.service.DoctorAppointmentService;
+import com.nbu.medicalrecordf104458.service.DoctorService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,10 +27,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
@@ -36,14 +40,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = DoctorAppointmentController.class)
 @AutoConfigureMockMvc(addFilters = false)
 @ExtendWith(MockitoExtension.class)
 @MockBean(JwtAuthFilter.class) // Mocks out JWT filter so it's not used in tests
-public class DoctorAppointmentControllerTest {
+public class DoctorControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -52,9 +55,10 @@ public class DoctorAppointmentControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private DoctorAppointmentService appointmentService;
+    private DoctorService doctorService;
 
     private Doctor doctor;
+    private DoctorDto doctorDto;
     private AppointmentDto appointmentDto;
     private Diagnose diagnose;
     private DoctorAppointment appointment;
@@ -85,6 +89,11 @@ public class DoctorAppointmentControllerTest {
         doctor.setAppointments(new HashSet<>());
         doctor.setDeleted(false);
         doctor.setSpecializations(new HashSet<>(Set.of(specialization)));
+
+        doctorDto = new DoctorDto();
+        doctorDto.setId(1L);
+        doctorDto.setName("Dr. Doctorov");
+        doctorDto.setSpecializationIds(new HashSet<>(Set.of(specialization.getId())));
 
         gp = new GeneralPractitioner();
         gp.setId(2L);
@@ -129,115 +138,80 @@ public class DoctorAppointmentControllerTest {
     }
 
     @Test
-    void testGetAllAppointments() throws Exception {
-        when(appointmentService.getAllAppointments()).thenReturn(Set.of(appointmentDto));
+    void testGetAllDoctors() throws Exception {
+        when(doctorService.getAllDoctors()).thenReturn(Set.of(doctorDto));
 
-        mockMvc.perform(get("/doctor-appointments/")
+        mockMvc.perform(get("/doctors/")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(1)) // Check that there's one appointment
-                .andExpect(jsonPath("$[0].id").value(appointmentDto.getId()))
-                .andExpect(jsonPath("$[0].visitDate").value(appointmentDto.getVisitDate().toString()))
-                .andExpect(jsonPath("$[0].doctorId").value(appointmentDto.getDoctorId()))
-                .andExpect(jsonPath("$[0].patientId").value(appointmentDto.getPatientId()))
-                .andExpect(jsonPath("$[0].diagnoses[0]").value(diagnose.getId()))
-                .andExpect(jsonPath("$[0].sickLeaveId").value(sickLeave.getId()));
-
-    }
-
-    @Test
-    void testGetAppointmentById() throws Exception {
-        when(appointmentService.getAppointmentById(1L)).thenReturn(appointmentDto);
-
-        mockMvc.perform(get("/doctor-appointments/{id}", 1L))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(appointmentDto.getId()));
-    }
-
-    @Test
-    void testCreateAppointment() throws Exception {
-        when(appointmentService.createAppointment(any())).thenReturn(appointmentDto);
-
-        mockMvc.perform(post("/doctor-appointments/")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(appointmentDto)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value(appointmentDto.getId()));
-    }
-
-    @Test
-    void testUpdateAppointment() throws Exception {
-        when(appointmentService.updateAppointment(eq(1L), any())).thenReturn(appointmentDto);
-
-        mockMvc.perform(put("/doctor-appointments/{id}", 1L)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(appointmentDto)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(appointmentDto.getId()));
-    }
-
-    @Test
-    void testDeleteAppointment() throws Exception {
-        doNothing().when(appointmentService).deleteAppointment(1L);
-
-        mockMvc.perform(delete("/doctor-appointments/{id}", 1L))
                 .andExpect(status().isOk());
     }
 
     @Test
-    void testAddDiagnose() throws Exception {
-        when(appointmentService.addDiagnose(1L, 1L)).thenReturn(appointmentDto);
+    void testGetDoctorById() throws Exception {
+        Long id = 1L;
+        when(doctorService.getDoctorById(id)).thenReturn(new DoctorDto());
 
-        mockMvc.perform(post("/doctor-appointments/1/diagnoses/1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(appointmentDto.getId()));
+        mockMvc.perform(get("/doctors/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
     @Test
-    void testRemoveDiagnose() throws Exception {
-        when(appointmentService.removeDiagnose(1L, 1L)).thenReturn(appointmentDto);
+    void testCreateDoctor() throws Exception {
+        DoctorDto doctorDto = new DoctorDto();
+        when(doctorService.createDoctor(any())).thenReturn(doctorDto);
 
-        mockMvc.perform(delete("/doctor-appointments/1/diagnoses/1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(appointmentDto.getId()));
+        mockMvc.perform(post("/doctors/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}"))
+                .andExpect(status().isCreated());
     }
 
     @Test
-    void testAddTreatment() throws Exception {
-        when(appointmentService.addTreatment(1L, 1L)).thenReturn(appointmentDto);
+    void testUpdateDoctor() throws Exception {
+        Long id = 1L;
+        DoctorDto doctorDto = new DoctorDto();
+        when(doctorService.updateDoctor(eq(id), any())).thenReturn(doctorDto);
 
-        mockMvc.perform(post("/doctor-appointments/1/treatments/1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(appointmentDto.getId()));
+        mockMvc.perform(put("/doctors/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}"))
+                .andExpect(status().isOk());
     }
 
     @Test
-    void testRemoveTreatment() throws Exception {
-        when(appointmentService.removeTreatment(1L, 1L)).thenReturn(appointmentDto);
+    void testDeleteDoctor() throws Exception {
+        doNothing().when(doctorService).deleteDoctor(anyLong());
 
-        mockMvc.perform(delete("/doctor-appointments/1/treatments/1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(appointmentDto.getId()));
+        mockMvc.perform(delete("/doctors/{id}", 1L))
+                .andExpect(status().isOk());
     }
 
     @Test
-    void testGetAppointmentsBetweenDates() throws Exception {
-        when(appointmentService.findVisitsByDateRange(any(), any())).thenReturn(Set.of(appointmentDto));
+    void testGetAllDoctorsWithAppointmentCount() throws Exception {
+        when(doctorService.getAllDoctorsWithAppointmentCount()).thenReturn(Set.of(new DoctorAppointmentsCountDto()));
 
-        mockMvc.perform(get("/doctor-appointments/between-dates/{startDate}/{endDate}", "2025-01-01", "2025-02-01"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(1))
-                .andExpect(jsonPath("$[0].id").value(appointmentDto.getId()));
+        mockMvc.perform(get("/doctors/appointments-count")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
     @Test
-    void testGetAppointmentsByDoctorAndDateRange() throws Exception {
-        when(appointmentService.findAppointmentsByDoctorAndDateRange(1L, LocalDate.of(2025, 1, 1), LocalDate.of(2025, 1, 31)))
-                .thenReturn(Set.of(appointmentDto));
+    void testGetDoctorWithAppointmentCount() throws Exception {
+        Long id = 1L;
+        when(doctorService.getDoctorWithAppointmentCount(id)).thenReturn(new DoctorAppointmentsCountDto());
 
-        mockMvc.perform(get("/doctor-appointments/doctor-and-between-dates/1/2025-01-01/2025-01-31"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(appointmentDto.getId()));
+        mockMvc.perform(get("/doctors/{id}/appointments-count", id)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
+    @Test
+    void testGetDoctorsWithMostSickLeaves() throws Exception {
+        when(doctorService.findDoctorsWithMostSickLeaves()).thenReturn(Set.of(new DoctorDto()));
+
+        mockMvc.perform(get("/doctors/doctors-with-most-sick-leaves")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
 }
