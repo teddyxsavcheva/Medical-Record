@@ -26,31 +26,31 @@ public class DoctorController {
     private final DoctorService doctorService;
 
     @GetMapping("/")
-    public ResponseEntity<Set<DoctorDto>> getAllSpecializations() {
+    public ResponseEntity<Set<DoctorDto>> getAllDoctors() {
         return ResponseEntity.ok(doctorService.getAllDoctors());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DoctorDto> getSpecializationById(@PathVariable Long id) {
+    public ResponseEntity<DoctorDto> getDoctorById(@PathVariable Long id) {
         return ResponseEntity.ok(doctorService.getDoctorById(id));
     }
 
     @PostMapping("/")
-    public ResponseEntity<DoctorDto> createSpecialization(@Valid @RequestBody DoctorDto dto) {
+    public ResponseEntity<DoctorDto> createDoctor(@Valid @RequestBody DoctorDto dto) {
         DoctorDto createdDto = doctorService.createDoctor(dto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(createdDto);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DoctorDto> updateSpecialization(@PathVariable Long id, @Valid @RequestBody DoctorDto dto) {
+    public ResponseEntity<DoctorDto> updateDoctor(@PathVariable Long id, @Valid @RequestBody DoctorDto dto) {
         DoctorDto updatedDto = doctorService.updateDoctor(id, dto);
 
         return ResponseEntity.ok(updatedDto);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> deleteSpecialization(@PathVariable Long id) {
+    public ResponseEntity<HttpStatus> deleteDoctor(@PathVariable Long id) {
         doctorService.deleteDoctor(id);
 
         return ResponseEntity.ok(HttpStatus.NO_CONTENT);

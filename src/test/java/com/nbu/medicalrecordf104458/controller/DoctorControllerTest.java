@@ -2,19 +2,10 @@ package com.nbu.medicalrecordf104458.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nbu.medicalrecordf104458.config.JwtAuthFilter;
-import com.nbu.medicalrecordf104458.dto.AppointmentDto;
-import com.nbu.medicalrecordf104458.dto.DiagnoseDto;
 import com.nbu.medicalrecordf104458.dto.DoctorDto;
 import com.nbu.medicalrecordf104458.dto.queries.DoctorAppointmentsCountDto;
-import com.nbu.medicalrecordf104458.model.Diagnose;
-import com.nbu.medicalrecordf104458.model.Doctor;
-import com.nbu.medicalrecordf104458.model.DoctorAppointment;
-import com.nbu.medicalrecordf104458.model.GeneralPractitioner;
-import com.nbu.medicalrecordf104458.model.Patient;
-import com.nbu.medicalrecordf104458.model.SickLeave;
-import com.nbu.medicalrecordf104458.model.Specialization;
-import com.nbu.medicalrecordf104458.model.Treatment;
 import com.nbu.medicalrecordf104458.service.DoctorService;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,23 +17,22 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDate;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = DoctorAppointmentController.class)
+@WebMvcTest(controllers = DoctorController.class)
 @AutoConfigureMockMvc(addFilters = false)
 @ExtendWith(MockitoExtension.class)
 @MockBean(JwtAuthFilter.class) // Mocks out JWT filter so it's not used in tests
@@ -57,161 +47,146 @@ public class DoctorControllerTest {
     @MockBean
     private DoctorService doctorService;
 
-    private Doctor doctor;
     private DoctorDto doctorDto;
-    private AppointmentDto appointmentDto;
-    private Diagnose diagnose;
-    private DoctorAppointment appointment;
-    private Specialization specialization;
-    private GeneralPractitioner gp;
-    private Patient patient;
-    private SickLeave sickLeave;
-    private Treatment treatment;
+    private DoctorAppointmentsCountDto doctorAppointmentsCountDto;
+    private Set<DoctorDto> mockDoctors;
 
     @BeforeEach
     public void setUp() {
-        diagnose = new Diagnose();
-        diagnose.setId(1L);
-        diagnose.setName("Flu");
-        diagnose.setDescription("A contagious respiratory illness.");
-        diagnose.setDeleted(false);
-        diagnose.setAppointments(new HashSet<>());
-
-        specialization = new Specialization();
-        specialization.setId(1L);
-        specialization.setName("Cardiology");
-        specialization.setDeleted(false);
-        specialization.setDoctors(new HashSet<>());
-
-        doctor = new Doctor();
-        doctor.setId(1L);
-        doctor.setName("Dr. Doctorov");
-        doctor.setAppointments(new HashSet<>());
-        doctor.setDeleted(false);
-        doctor.setSpecializations(new HashSet<>(Set.of(specialization)));
-
-        doctorDto = new DoctorDto();
-        doctorDto.setId(1L);
-        doctorDto.setName("Dr. Doctorov");
-        doctorDto.setSpecializationIds(new HashSet<>(Set.of(specialization.getId())));
-
-        gp = new GeneralPractitioner();
-        gp.setId(2L);
-        gp.setName("Dr. Lekar");
-        gp.setSpecializations(new HashSet<>(Set.of(specialization)));
-
-        patient = new Patient();
-        patient.setId(1L);
-        patient.setName("Pacientov");
-        patient.setFamilyDoctor(gp);
-        patient.setLastInsurancePayment(LocalDate.of(2025, 1, 31));
-        patient.setUnifiedCivilNumber(1234L);
-
-        appointment = new DoctorAppointment();
-        appointment.setId(1L);
-        appointment.setVisitDate(LocalDate.of(2025, 1, 31));
-        appointment.setDoctor(doctor);
-        appointment.setPatient(patient);
-        appointment.setDiagnoses(new HashSet<>(Set.of(diagnose)));
-
-        sickLeave = new SickLeave();
-        sickLeave.setId(1L);
-        sickLeave.setStartDate(LocalDate.of(2025, 2, 1));
-        sickLeave.setEndDate(LocalDate.of(2025, 2, 10));
-        sickLeave.setDoctorAppointment(appointment);
-        appointment.setSickLeave(sickLeave);
-
-        treatment = new Treatment();
-        treatment.setId(1L);
-        treatment.setMedicineName("Paracetamol");
-        treatment.setDosageAmount("1 pill");
-        treatment.setFrequency("Twice a day");
-        treatment.setAppointments(new HashSet<>(Set.of(appointment)));
-
-        appointmentDto = new AppointmentDto();
-        appointmentDto.setId(1L);
-        appointmentDto.setVisitDate(LocalDate.of(2025, 1, 31));
-        appointmentDto.setDoctorId(doctor.getId());
-        appointmentDto.setPatientId(patient.getId());
-        appointmentDto.setDiagnoses(new HashSet<>(Set.of(diagnose.getId())));
-        appointmentDto.setSickLeaveId(sickLeave.getId());
+        doctorDto = new DoctorDto(1L, "Dr. Doctorov", Set.of(1L));
+        doctorAppointmentsCountDto = new DoctorAppointmentsCountDto(1L, "Dr. Doctorov", 10L);
+        mockDoctors = Set.of(doctorDto);
     }
 
     @Test
-    void testGetAllDoctors() throws Exception {
-        when(doctorService.getAllDoctors()).thenReturn(Set.of(doctorDto));
+    public void testGetAllDoctors() throws Exception {
+        when(doctorService.getAllDoctors()).thenReturn(mockDoctors);
 
-        mockMvc.perform(get("/doctors/")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+        mockMvc.perform(get("/doctors/"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("[0].id", is(1)))
+                .andExpect(jsonPath("[0].name", is("Dr. Doctorov")));
     }
 
     @Test
-    void testGetDoctorById() throws Exception {
-        Long id = 1L;
-        when(doctorService.getDoctorById(id)).thenReturn(new DoctorDto());
+    public void testGetDoctorById() throws Exception {
+        when(doctorService.getDoctorById(1L)).thenReturn(doctorDto);
 
-        mockMvc.perform(get("/doctors/{id}", id)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+        mockMvc.perform(get("/doctors/1"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.name", is("Dr. Doctorov")));
     }
 
     @Test
-    void testCreateDoctor() throws Exception {
-        DoctorDto doctorDto = new DoctorDto();
-        when(doctorService.createDoctor(any())).thenReturn(doctorDto);
+    public void testGetDoctorById_NotFound() throws Exception {
+        when(doctorService.getDoctorById(1L)).thenThrow(new EntityNotFoundException("No doctor found with id: 1"));
+
+        mockMvc.perform(get("/doctors/1"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void testCreateDoctor() throws Exception {
+        DoctorDto createdDto = new DoctorDto(1L, "Dr. New", Set.of(1L));
+
+        when(doctorService.createDoctor(any(DoctorDto.class))).thenReturn(createdDto);
 
         mockMvc.perform(post("/doctors/")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{}"))
-                .andExpect(status().isCreated());
+                        .content(objectMapper.writeValueAsString(createdDto)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.name", is("Dr. New")));
     }
 
     @Test
-    void testUpdateDoctor() throws Exception {
-        Long id = 1L;
-        DoctorDto doctorDto = new DoctorDto();
-        when(doctorService.updateDoctor(eq(id), any())).thenReturn(doctorDto);
+    public void testUpdateDoctor() throws Exception {
+        DoctorDto updatedDto = new DoctorDto(1L, "Dr. Updated", Set.of(1L));
 
-        mockMvc.perform(put("/doctors/{id}", id)
+        when(doctorService.updateDoctor(eq(1L), any(DoctorDto.class))).thenReturn(updatedDto);
+
+        mockMvc.perform(put("/doctors/1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{}"))
+                        .content(objectMapper.writeValueAsString(updatedDto)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.name", is("Dr. Updated")));
+    }
+
+    @Test
+    public void testDeleteDoctor() throws Exception {
+        doNothing().when(doctorService).deleteDoctor(1L);
+
+        mockMvc.perform(delete("/doctors/1"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    void testDeleteDoctor() throws Exception {
-        doNothing().when(doctorService).deleteDoctor(anyLong());
+    public void testGetAllDoctorsWithAppointmentCount() throws Exception {
+        Set<DoctorAppointmentsCountDto> doctorAppointmentsCountDtos = Set.of(doctorAppointmentsCountDto);
 
-        mockMvc.perform(delete("/doctors/{id}", 1L))
-                .andExpect(status().isOk());
+        when(doctorService.getAllDoctorsWithAppointmentCount()).thenReturn(doctorAppointmentsCountDtos);
+
+        mockMvc.perform(get("/doctors/appointments-count"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("[0].doctorId", is(1)))
+                .andExpect(jsonPath("[0].appointmentsCount", is(10)));
     }
 
     @Test
-    void testGetAllDoctorsWithAppointmentCount() throws Exception {
-        when(doctorService.getAllDoctorsWithAppointmentCount()).thenReturn(Set.of(new DoctorAppointmentsCountDto()));
+    public void testGetDoctorWithAppointmentCount() throws Exception {
+        when(doctorService.getDoctorWithAppointmentCount(1L)).thenReturn(doctorAppointmentsCountDto);
 
-        mockMvc.perform(get("/doctors/appointments-count")
+        mockMvc.perform(get("/doctors/1/appointments-count"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.doctorId", is(1)))
+                .andExpect(jsonPath("$.appointmentsCount", is(10)));
+    }
+
+    @Test
+    public void testGetDoctorsWithMostSickLeaves() throws Exception {
+        when(doctorService.findDoctorsWithMostSickLeaves()).thenReturn(mockDoctors);
+
+        mockMvc.perform(get("/doctors/doctors-with-most-sick-leaves"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("[0].id", is(1)))
+                .andExpect(jsonPath("[0].name", is("Dr. Doctorov")));
+    }
+
+    @Test
+    public void testAddSpecialization() throws Exception {
+        Long doctorId = 1L;
+        Long specializationId = 2L;
+        doctorDto.setSpecializationIds(Set.of(1L, 2L));
+
+        when(doctorService.addSpecialization(doctorId, specializationId)).thenReturn(doctorDto);
+
+        mockMvc.perform(post("/doctors/{doctorId}/specializations/{specializationId}", doctorId, specializationId)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(doctorId))
+                .andExpect(jsonPath("$.specializationIds").isArray())
+                .andExpect(jsonPath("$.specializationIds.size()").value(2));
     }
 
     @Test
-    void testGetDoctorWithAppointmentCount() throws Exception {
-        Long id = 1L;
-        when(doctorService.getDoctorWithAppointmentCount(id)).thenReturn(new DoctorAppointmentsCountDto());
+    public void testRemoveSpecialization() throws Exception {
+        Long doctorId = 1L;
+        Long specializationId = 2L;
 
-        mockMvc.perform(get("/doctors/{id}/appointments-count", id)
+        when(doctorService.removeSpecialization(doctorId, specializationId)).thenReturn(doctorDto);
+
+        mockMvc.perform(delete("/doctors/{doctorId}/specializations/{specializationId}", doctorId, specializationId)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    void testGetDoctorsWithMostSickLeaves() throws Exception {
-        when(doctorService.findDoctorsWithMostSickLeaves()).thenReturn(Set.of(new DoctorDto()));
-
-        mockMvc.perform(get("/doctors/doctors-with-most-sick-leaves")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(doctorId))
+                .andExpect(jsonPath("$.specializationIds").isArray())
+                .andExpect(jsonPath("$.specializationIds[0]").value(1L));
     }
 }
