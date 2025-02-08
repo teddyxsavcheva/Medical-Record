@@ -11,6 +11,7 @@ import com.nbu.medicalrecordf104458.model.GeneralPractitioner;
 import com.nbu.medicalrecordf104458.model.Patient;
 import com.nbu.medicalrecordf104458.model.SickLeave;
 import com.nbu.medicalrecordf104458.model.Specialization;
+import com.nbu.medicalrecordf104458.model.Treatment;
 import com.nbu.medicalrecordf104458.service.DoctorAppointmentService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -62,6 +63,7 @@ public class DoctorAppointmentControllerTest {
     private GeneralPractitioner gp;
     private Patient patient;
     private SickLeave sickLeave;
+    private Treatment treatment;
     private Set<AppointmentDto> mockAppointments;
 
     @BeforeEach
@@ -111,6 +113,13 @@ public class DoctorAppointmentControllerTest {
         sickLeave.setEndDate(LocalDate.of(2025, 2, 10));
         sickLeave.setDoctorAppointment(appointment);
         appointment.setSickLeave(sickLeave);
+
+        treatment = new Treatment();
+        treatment.setId(1L);
+        treatment.setMedicineName("Paracetamol");
+        treatment.setDosageAmount("1 pill");
+        treatment.setFrequency("Twice a day");
+        treatment.setAppointments(new HashSet<>(Set.of(appointment)));
 
         appointmentDto = new AppointmentDto();
         appointmentDto.setId(1L);
@@ -178,12 +187,58 @@ public class DoctorAppointmentControllerTest {
     }
 
     @Test
+    void testAddDiagnose() throws Exception {
+        when(appointmentService.addDiagnose(1L, 1L)).thenReturn(appointmentDto);
+
+        mockMvc.perform(post("/doctor-appointments/1/diagnoses/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(appointmentDto.getId()));
+    }
+
+    @Test
+    void testRemoveDiagnose() throws Exception {
+        when(appointmentService.removeDiagnose(1L, 1L)).thenReturn(appointmentDto);
+
+        mockMvc.perform(delete("/doctor-appointments/1/diagnoses/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(appointmentDto.getId()));
+    }
+
+    @Test
+    void testAddTreatment() throws Exception {
+        when(appointmentService.addTreatment(1L, 1L)).thenReturn(appointmentDto);
+
+        mockMvc.perform(post("/doctor-appointments/1/treatments/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(appointmentDto.getId()));
+    }
+
+    @Test
+    void testRemoveTreatment() throws Exception {
+        when(appointmentService.removeTreatment(1L, 1L)).thenReturn(appointmentDto);
+
+        mockMvc.perform(delete("/doctor-appointments/1/treatments/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(appointmentDto.getId()));
+    }
+
+    @Test
     void testGetAppointmentsBetweenDates() throws Exception {
         when(appointmentService.findVisitsByDateRange(any(), any())).thenReturn(Set.of(appointmentDto));
 
         mockMvc.perform(get("/doctor-appointments/between-dates/{startDate}/{endDate}", "2025-01-01", "2025-02-01"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].id").value(appointmentDto.getId()));
+    }
+
+    @Test
+    void testGetAppointmentsByDoctorAndDateRange() throws Exception {
+        when(appointmentService.findAppointmentsByDoctorAndDateRange(1L, LocalDate.of(2025, 1, 1), LocalDate.of(2025, 1, 31)))
+                .thenReturn(Set.of(appointmentDto));
+
+        mockMvc.perform(get("/doctor-appointments/doctor-and-between-dates/1/2025-01-01/2025-01-31"))
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(appointmentDto.getId()));
     }
 
