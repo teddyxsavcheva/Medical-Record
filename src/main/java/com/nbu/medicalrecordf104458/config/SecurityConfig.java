@@ -35,6 +35,7 @@ public class SecurityConfig {
                         (auth -> auth
                                 //.requestMatchers("/api/v1/auth/**").permitAll()
                                 .requestMatchers("/api/v1/auth/register/**").permitAll()
+                                .requestMatchers("/api/v1/auth/users/**").permitAll()
                                 .requestMatchers("/api/v1/auth/register-doctor/**").hasAuthority("ADMIN")
                                 .requestMatchers("/api/v1/auth/register-gp/**").hasAuthority("ADMIN")
                                 .requestMatchers("/api/v1/auth/register-patient/**").hasAuthority("ADMIN")
@@ -95,7 +96,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.DELETE, "/sick-leaves/**").hasAnyAuthority("ADMIN", "DOCTOR")
 
                                 // All other requests require authentication (for the user to be logged in)
-                                .anyRequest().authenticated()
+                                //.anyRequest().authenticated()
                         )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Stateless session for JWT

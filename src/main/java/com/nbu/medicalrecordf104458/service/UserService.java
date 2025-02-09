@@ -7,6 +7,8 @@ import com.nbu.medicalrecordf104458.dto.auth.RegisterGpDto;
 import com.nbu.medicalrecordf104458.dto.auth.RegisterPatientDto;
 import com.nbu.medicalrecordf104458.dto.auth.RegisterUserDto;
 
+import java.util.Set;
+
 public interface UserService {
 
     AuthenticationResponseDto registerAdmin(RegisterUserDto userDto);
@@ -18,5 +20,7 @@ public interface UserService {
     AuthenticationResponseDto registerPatient(RegisterPatientDto registerPatientDto);
 
     AuthenticationResponseDto authenticate(AuthenticationRequestDto request);
+
+    Set<RegisterUserDto> getAllUsers();
 
 }

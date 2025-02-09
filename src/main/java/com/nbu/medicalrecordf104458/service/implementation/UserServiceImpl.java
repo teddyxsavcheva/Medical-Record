@@ -32,6 +32,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -181,6 +184,17 @@ public class UserServiceImpl implements UserService {
         return AuthenticationResponseDto.builder()
                 .token(jwtToken)
                 .build();
+    }
+
+    @Override
+    public Set<RegisterUserDto> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(user -> new RegisterUserDto(
+                        user.getEmail(),
+                        user.getPassword(),
+                        user.getRole()
+                ))
+                .collect(Collectors.toSet());
     }
 
 }
