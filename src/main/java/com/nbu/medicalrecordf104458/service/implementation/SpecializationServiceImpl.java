@@ -47,10 +47,10 @@ public class SpecializationServiceImpl implements SpecializationService {
        Specialization specialization = mapper.convertToEntity(specializationDto);
 
         Set<Doctor> doctors = specialization.getDoctors().stream()
-                .filter(doctor -> !doctor.isDeleted())
+                .filter(doctor -> doctor.isDeleted())
                 .collect(Collectors.toSet());
 
-        if (doctors.isEmpty()) {
+        if (!doctors.isEmpty()) {
             throw new IllegalArgumentException("You can't use records that are marked for deletion!");
         }
 
