@@ -96,7 +96,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.DELETE, "/sick-leaves/**").hasAnyAuthority("ADMIN", "DOCTOR")
 
                                 // All other requests require authentication (for the user to be logged in)
-                                //.anyRequest().authenticated()
+                                .anyRequest().authenticated()
                         )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Stateless session for JWT
