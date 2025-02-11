@@ -94,7 +94,7 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'DOCTOR') or @customSecurityChecker.isPatientAccessingOwnData(#patientId)")
     public boolean isInsurancePaidLast6Months(Long patientId) {
         Patient patient = patientRepository.findById(patientId)
                 .filter(patient1 -> !patient1.isDeleted())
