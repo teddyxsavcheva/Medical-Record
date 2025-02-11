@@ -55,10 +55,10 @@ public class GeneralPractitionerServiceImpl implements GeneralPractitionerServic
                 .collect(Collectors.toSet());
 
         Set<Patient> patients = gp.getPatients().stream()
-                .filter(patient -> !patient.isDeleted())
+                .filter(patient -> patient.isDeleted())
                 .collect(Collectors.toSet());
 
-        if (specializations.isEmpty() || patients.isEmpty()) {
+        if (specializations.isEmpty() || !patients.isEmpty()) {
             throw new IllegalArgumentException("You can't use records that are marked for deletion!");
         }
 
